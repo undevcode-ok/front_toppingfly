@@ -1,0 +1,5 @@
+export const MENU_CONSTANTS = {
+  NAV_HEIGHT: 120,
+  SCROLL_TIMEOUT: 700,
+  NAV_OFFSET: 12,
+} as const;
