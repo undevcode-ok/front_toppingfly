@@ -20,7 +20,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2️⃣ Instalar Node
+      # 2️⃣ Instalar Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -34,9 +34,11 @@ jobs:
       - name: Build project
         run: |
           if [ "${GITHUB_REF_NAME}" = "dev" ]; then
-            npm run build -- --mode development
+            echo "Building for development..."
+            NODE_ENV=development npm run build:dev
           else
-            npm run build -- --mode production
+            echo "Building for production..."
+            NODE_ENV=production npm run build:prod
           fi
 
       # 5️⃣ Configurar SSH
@@ -51,5 +53,7 @@ jobs:
       # 6️⃣ Deploy con rsync
       - name: Deploy via rsync
         run: |
-          echo "Desplegando en ${GITHUB_REF_NAME}..."
-          rsync -avz --delete dist/ ${{ env.REMOTE_USER }}@${{ env.REMOTE_HOST }}:${{ env.REMOTE_DIR }}
+          echo "Deploying to server..."
+          rsync -avz --delete .next/ ${{ env.REMOTE_USER }}@${{ env.REMOTE_HOST }}:${{ env.REMOTE_DIR }}
+          rsync -avz --delete public/ ${{ env.REMOTE_USER }}@${{ env.REMOTE_HOST }}:${{ env.REMOTE_DIR }}
+          rsync -avz --delete package.json ${{ env.REMOTE_USER }}@${{ env.REMOTE_HOST }}:${{ env.REMOTE_DIR }}
