@@ -31,14 +31,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 4️⃣ Build del proyecto
-      # IMPORTANTE: Aquí pasamos los secretos para que Next.js los 'queme' en el build
+      # 4️⃣ Build según la rama
       - name: Build project
         env:
+          # ✅ ESTA LÍNEA ES LA CLAVE: vincula el Secret con el proceso de Build
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
         run: |
-          echo "Building for production..."
-          npm run build:prod
+          if [ "${GITHUB_REF_NAME}" = "dev" ]; then
+            echo "Building for development..."
+            NODE_ENV=development npm run build:dev
+          else
+            echo "Building for production..."
+            NODE_ENV=production npm run build:prod
+          fi
 
       # 5️⃣ Configurar SSH
       - name: Setup SSH
