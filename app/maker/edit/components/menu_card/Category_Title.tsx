@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/common/components/atoms/button";
-import { Check, AlertCircle } from "lucide-react";
+import { Check } from "lucide-react";
 import { UseFormRegister, FieldErrors } from "react-hook-form";
 import { CategoryFormData } from "../../utils/validate_category_form";
 
@@ -15,7 +15,7 @@ interface CategoryTitleProps {
   onFocus: () => void;
   onBlur: () => void;
   isSubmitting: boolean;
-  
+  isDragging: boolean;
 }
 
 export const CategoryTitle: React.FC<CategoryTitleProps> = ({
@@ -26,23 +26,59 @@ export const CategoryTitle: React.FC<CategoryTitleProps> = ({
   onFocus,
   onBlur,
   isSubmitting,
+  isDragging,
 }) => {
+
+  // Estado para saber si estamos editando
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleFocus = () => {
+    setIsEditing(true);
+    onFocus();
+  };
+
+  const handleBlur = () => {
+    setIsEditing(false);
+    onBlur();
+  };
+
+  // Estilo del cursor
+  const cursorStyle = isDragging ? 'grabbing' : isEditing ? 'text' : 'grab';
+
   return (
     <div className="flex flex-col w-full">
       <div className="flex items-center gap-2 w-full">
-        {/* ==================== INPUT EDITABLE CON VALIDACIÓN ==================== */}
+        {/* Input editable con diseño moderno */}
         <input
           type="text"
           {...register("title")}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          className={`w-full min-w-0 p-1 font-semibold text-slate-700 bg-transparent border-b transition-colors truncate focus:outline-none border-transparent focus:border-orange-300`}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onClick={handleClick}
+          className={`
+            w-full min-w-0 px-2 py-1.5 
+            font-semibold text-slate-700 
+            rounded-lg
+            transition-all duration-200
+            truncate focus:outline-none
+            ${isDragging 
+              ? 'bg-transparent border-transparent' 
+              : isEditing
+                ? 'bg-orange-50 border-2 border-orange-400 shadow-sm'
+                : 'bg-transparent border-2 border-transparent hover:bg-slate-50'
+            }
+          `}
           maxLength={50}
           placeholder="Nombre de categoría"
           disabled={isSubmitting}
+          style={{ cursor: cursorStyle }}
         />
 
-        {/* ==================== BOTÓN DE GUARDAR ANIMADO ==================== */}
+        {/* Botón de guardar */}
         <AnimatePresence>
           {showSaveButton && (
             <motion.div
@@ -59,7 +95,8 @@ export const CategoryTitle: React.FC<CategoryTitleProps> = ({
                 size="icon"
                 className="h-8 w-8 text-emerald-600 hover:bg-emerald-50 hover:scale-105 transition"
                 onMouseDown={(e) => {
-                  e.preventDefault(); // ⚠️ CRÍTICO: Evita que se dispare onBlur
+                  e.preventDefault();
+                  e.stopPropagation();
                   onSave();
                 }}
                 type="button"

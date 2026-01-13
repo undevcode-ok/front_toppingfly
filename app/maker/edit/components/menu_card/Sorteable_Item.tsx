@@ -36,18 +36,22 @@ export const SortableItem: React.FC<SortableItemProps> = ({
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="touch-none">
-      <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl p-3 hover:shadow-sm transition-shadow">
-        {/* Drag Handle */}
-        <div
-          {...attributes}
-          {...listeners}
-          className=" cursor-grab active:cursor-grabbing touch-none text-slate-400 hover:text-slate-600 transition-colors shrink-0"
-        >
+    <div ref={setNodeRef} style={style}>
+      <div 
+        className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl p-3 hover:shadow-sm transition-shadow"
+        style={{ 
+          touchAction: 'none',
+          cursor: isDragging ? 'grabbing' : 'grab'
+        }}
+        {...attributes}
+        {...listeners}
+      >
+        {/* Drag Handle - solo visual */}
+        <div className="text-slate-400 shrink-0 pointer-events-none">
           <GripVertical className="w-4 h-4" />
         </div>
 
-        {/* Item Card */}
+        {/* Item Card - los botones internos manejan su propia propagación */}
         <div className="flex-1 min-w-0 overflow-hidden">
           <ItemCard
             item={item}

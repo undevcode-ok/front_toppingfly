@@ -51,7 +51,7 @@ export const LoginCard = () => {
           </div>
           <div className="flex gap-3">
             <a
-              href="https://www.instagram.com/flexitaim/?hl=es-la"
+              href="https://www.instagram.com/toppingfly/"
               target="_blank"
               rel="noopener noreferrer"
               className="w-12 h-12 rounded-full bg-linear-to-tr from-yellow-400 via-pink-500 to-purple-600 flex items-center justify-center hover:scale-110 transition-transform"
@@ -59,7 +59,7 @@ export const LoginCard = () => {
               <InstagramIcon />
             </a>
             <a
-              href="https://www.tiktok.com/@flexitaim"
+              href="https://www.tiktok.com/@toppyngfly"
               target="_blank"
               rel="noopener noreferrer"
               className="w-12 h-12 rounded-full bg-black flex items-center justify-center hover:scale-110 transition-transform"

@@ -11,11 +11,23 @@ import { SortableCategory } from "./Sorteable_Category";
 interface CategoryListProps {
   categories: Categories[];
   onMenuUpdate: () => Promise<void>;
+  expandedCategoryId?: number | null;
+  setExpandedCategoryId?: (id: number | null) => void;
 }
 
-const CategoryList = ({ categories: initialCategories, onMenuUpdate }: CategoryListProps) => {
-  const [expandedCategoryId, setExpandedCategoryId] = useState<number | null>(null);
+const CategoryList = ({ 
+  categories: initialCategories, 
+  onMenuUpdate,
+  expandedCategoryId: controlledExpandedId,
+  setExpandedCategoryId: setControlledExpandedId
+}: CategoryListProps) => {
+  const [localExpandedId, setLocalExpandedId] = useState<number | null>(null);
   const [categories, setCategories] = useState<Categories[]>([]);
+
+  // Usar estado controlado si se proporciona, sino usar estado local
+  const isControlled = controlledExpandedId !== undefined && setControlledExpandedId !== undefined;
+  const expandedCategoryId = isControlled ? controlledExpandedId : localExpandedId;
+  const setExpandedCategoryId = isControlled ? setControlledExpandedId : setLocalExpandedId;
 
   // Sensores para drag & drop
   const sensors = useDragAndDrop();

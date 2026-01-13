@@ -16,6 +16,7 @@ interface ItemListProps {
   categoryId: number;
   sensors: any;
   onItemChange: () => Promise<void>;
+  ensureCategoryExpanded: () => void; // Nueva prop para asegurar que la categoría esté expandida
 }
 
 export const ItemList: React.FC<ItemListProps> = ({
@@ -23,8 +24,10 @@ export const ItemList: React.FC<ItemListProps> = ({
   categoryId,
   sensors,
   onItemChange,
+  ensureCategoryExpanded,
 }) => {
   const [editingItem, setEditingItem] = useState<Items | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   const { localItems, handleDragEnd } = useItemDragDrop(
     initialItems,
@@ -34,6 +37,28 @@ export const ItemList: React.FC<ItemListProps> = ({
   const { deleteItem, deletingItemId, createItem, editItem } = useItemOperations({
     onItemChange,
   });
+
+  // Handler para crear item - mantiene la categoría abierta
+  const handleCreateItem = async (formData: FormData) => {
+    const result = await createItem(formData, categoryId);
+    if (result.success) {
+      setIsCreating(false);
+      // Asegurar que la categoría esté expandida después de crear
+      ensureCategoryExpanded();
+    }
+    return result;
+  };
+
+  // Handler para editar item - mantiene la categoría abierta
+  const handleEditItem = async (item: Items, formData: FormData) => {
+    const result = await editItem(item, formData);
+    if (result.success) {
+      setEditingItem(null);
+      // Asegurar que la categoría esté expandida después de editar
+      ensureCategoryExpanded();
+    }
+    return result;
+  };
 
   return (
     <div className="mt-3 space-y-3">
@@ -65,13 +90,16 @@ export const ItemList: React.FC<ItemListProps> = ({
       <div className="pt-4 mt-4 border-t border-slate-300">
         <ItemDialog
           categoryId={categoryId}
-          onSubmit={(formData) => createItem(formData, categoryId)}
+          onSubmit={handleCreateItem}
+          open={isCreating}
+          onOpenChange={setIsCreating}
           trigger={
             <Button
               size="sm"
               variant="outline"
               className="w-full text-base border-dashed border-slate-300 text-slate-500 hover:border-orange-400 hover:text-orange-500 hover:bg-orange-50/50 rounded-xl py-5 transition-all"
               type="button"
+              onClick={() => setIsCreating(true)}
             >
               <Plus className="w-6! h-6! mr-2" /> Agregar plato
             </Button>
@@ -84,7 +112,7 @@ export const ItemList: React.FC<ItemListProps> = ({
         <ItemDialog
           categoryId={categoryId}
           item={editingItem}
-          onSubmit={(formData) => editItem(editingItem, formData)}
+          onSubmit={(formData) => handleEditItem(editingItem, formData)}
           trigger={<span />}
           open={!!editingItem}
           onOpenChange={(open) => {

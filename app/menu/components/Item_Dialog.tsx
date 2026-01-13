@@ -57,35 +57,31 @@ export function ItemDetailDialog({
               className="object-cover"
             />
 
-            <DialogClose
-              className={`absolute top-4 right-4 flex items-center justify-center ${
-                isDark ? "text-white" : "text-black"
-              } text-3xl z-10`}
-            >
-              &times;
-            </DialogClose>
+            
           </div>
         )}
 
-        <div className={`flex flex-col gap-4 p-6 sm:p-8 overflow-hidden ${inter.className}`}>
+        <div className={`flex flex-col gap-4 p-6 pt-0 sm:p-8 sm:pt-0 overflow-hidden ${inter.className}`}>
           <DialogTitle
-            className={`text-2xl sm:text-3xl font-semibold tracking-tight wrap-break-word ${titleColor}`}
+            className={`text-2xl sm:text-3xl font-semibold tracking-tight wrap-break-word ${titleColor} pt-6`}
           >
             {item.title}
           </DialogTitle>
 
           {item.description && (
             <DialogDescription
-              className={`text-base sm:text-lg leading-relaxed wrap-break-word overflow-wrap-anywhere ${textColor} py-4`}
+              className={`text-base sm:text-lg leading-relaxed wrap-break-word overflow-wrap-anywhere ${textColor} p-0 sm:py-2`}
             >
               {item.description}
             </DialogDescription>
           )}
 
           {isAvailable ? (
-            <p className={`text-2xl font-semibold tracking-tight ${priceColor}`}>
-              ${item.price}
-            </p>
+            item.price > 0 && (
+              <p className={`text-2xl font-semibold tracking-tight ${priceColor} py-2`}>
+                ${item.price}
+              </p>
+            )
           ) : (
             <span
               className={`inline-block text-sm px-3 py-1 rounded-md font-medium ${

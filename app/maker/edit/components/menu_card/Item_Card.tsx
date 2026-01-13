@@ -52,8 +52,12 @@ export const ItemCard: React.FC<ItemCardProps> = ({
         )}
       </div>
 
-      {/* Botones de acción */}
-      <div className="flex gap-1 shrink-0">
+      {/* Botones de acción - SOLO ellos detienen propagación */}
+      <div 
+        className="flex gap-1 shrink-0"
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Botón Editar */}
         <Button
           size="sm"
