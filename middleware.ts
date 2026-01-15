@@ -2,79 +2,103 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  // Obtener el token de las cookies
-  const tokenCookie = request.cookies.get("token");
-  // Obtener el token de la URL (si está presente como parámetro)
-  const tokenUrl = request.nextUrl.searchParams.get("token");
-  // Seleccionar el token válido, priorizando el token de la URL
-  const token = tokenUrl || tokenCookie;
-  
   const { pathname } = request.nextUrl;
-  const idParam = request.nextUrl.searchParams.get("id");
+  
+  // Obtener token de cookies o URL
+  const tokenCookie = request.cookies.get("token");
+  const tokenUrl = request.nextUrl.searchParams.get("token");
+  const token = tokenUrl || tokenCookie?.value;
 
-  // Definir rutas públicas (no requieren token)
-  const publicRoutes = ["/" ,"/auth", "/forgotpassword"];
-  // Definir rutas privadas (requieren token)
-  const privateRoutes = ["/home", "/user/create/account"];
-  // Definir rutas específicas de cambio de contraseña (requieren token)
-  const passwordRoutes = ["/user/create/password", "/user/change/password"];
-  // Definir rutas de maker (requieren token)
-  const makerRoutes = "/maker"; // Cualquier ruta que empiece con /maker
-  // Definir rutas de menu (requieren token si no tiene el id)
- 
+  // ==================== RUTAS COMPLETAMENTE PÚBLICAS ====================
+  // Estas rutas NUNCA redirigen, con o sin token
+  const alwaysPublicRoutes = [
+    "/",  // 👈 Landing page siempre accesible
+  ];
 
-  // Verificar si la ruta es pública
-  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
-  // Verificar si la ruta es privada
-  const isPrivateRoute = privateRoutes.some(route => pathname.startsWith(route));
-  // Verificar si la ruta es de cambio de contraseña
+  // ==================== RUTAS PÚBLICAS (redirigen a /home si hay token) ====================
+  const publicAuthRoutes = [
+    "/auth",
+    "/forgot_password",
+  ];
+
+  // ==================== RUTAS CON TOKEN EN URL ====================
+  const passwordRoutes = [
+    "/user/create/password",
+    "/user/change/password"
+  ];
+
+  // ==================== RUTAS PRIVADAS ====================
+  const privateRoutes = [
+    "/home",
+    "/maker",
+    "/user/create/account",
+  ];
+
+  // Verificar tipo de ruta
+  const isAlwaysPublic = alwaysPublicRoutes.some(route => pathname === route); // 👈 Exacto, no startsWith
+  const isPublicAuth = publicAuthRoutes.some(route => pathname.startsWith(route));
   const isPasswordRoute = passwordRoutes.some(route => pathname.startsWith(route));
-  // Verificar si la ruta es /maker o cualquier subruta de /maker
-  const isMakerRoute = pathname.startsWith(makerRoutes);
- 
+  const isPrivateRoute = privateRoutes.some(route => pathname.startsWith(route));
+  const isMenuRoute = pathname.startsWith("/menu");
 
-  // Si el usuario tiene token y está intentando acceder a una ruta pública (auth, forgotpassword), redirigir a /home
-  if (isPublicRoute && token) {
+  // ==================== LÓGICA DE REDIRECCIÓN ====================
+
+  // 1️⃣ Landing page - SIEMPRE permitir acceso
+  if (isAlwaysPublic) {
+    return NextResponse.next();
+  }
+
+  // 2️⃣ Rutas de menú público - SIEMPRE permitir acceso
+  if (isMenuRoute) {
+    return NextResponse.next();
+  }
+
+  // 3️⃣ Rutas de auth/forgot con token → redirigir a /home
+  if (isPublicAuth && token) {
     return NextResponse.redirect(new URL("/home", request.url));
   }
 
-  // Si la ruta no es pública (ni /auth ni /forgotpassword) y no hay token, redirigir a /auth
-  if (!isPublicRoute && !token) {
+  // 4️⃣ Rutas de auth/forgot sin token → permitir acceso
+  if (isPublicAuth && !token) {
+    return NextResponse.next();
+  }
+
+  // 5️⃣ Rutas de contraseña con token en URL → permitir acceso
+  if (isPasswordRoute && tokenUrl) {
+    return NextResponse.next();
+  }
+
+  // 6️⃣ Rutas de contraseña sin token en URL → redirigir a /auth
+  if (isPasswordRoute && !tokenUrl) {
     return NextResponse.redirect(new URL("/auth", request.url));
   }
 
-  // Si la ruta es de cambio de contraseña y no hay token, redirigir a /auth
-  if (isPasswordRoute && !token) {
-    return NextResponse.redirect(new URL("/auth", request.url));
-  }
-
-  // Si la ruta es /maker o cualquier subruta de /maker y no hay token, redirigir a /auth
-  if (isMakerRoute && !token) {
-    return NextResponse.redirect(new URL("/auth", request.url));
-  }
-
-  
-  
-  // Si es ruta privada y NO hay token, redirigir a /auth
+  // 7️⃣ Rutas privadas SIN token → redirigir a /auth
   if (isPrivateRoute && !token) {
     return NextResponse.redirect(new URL("/auth", request.url));
   }
 
-  // Permitir continuar
+  // 8️⃣ Rutas privadas CON token → permitir acceso
+  if (isPrivateRoute && token) {
+    return NextResponse.next();
+  }
+
+  // 9️⃣ Cualquier otra ruta sin token → redirigir a /auth
+  if (!token) {
+    return NextResponse.redirect(new URL("/auth", request.url));
+  }
+
+  // 🔟 Por defecto, permitir acceso
   return NextResponse.next();
 }
 
-// Configurar las rutas a las que se aplicará el middleware
 export const config = {
   matcher: [
-    '/', 
+    '/',
     '/auth',
-    '/forgotpassword',
+    '/forgot_password',
     '/home',
-    '/user/:path*', // Captura /user/create/account y cualquier subruta de /user
-    '/user/create/password',
-    '/user/change/password', // Rutas de cambio de contraseña
-    '/maker', // Ruta base de maker
-    '/maker/:path*', // Asegura que también se capturen las subrutas de /maker
+    '/user/:path*',
+    '/maker/:path*',
   ],
 };

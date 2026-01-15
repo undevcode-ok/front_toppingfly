@@ -1,50 +1,46 @@
-/*AQUI DEBE IR LOS QR DE LOS MENUS DE DEMOSTRACION */
-
+"use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
-function InfoCard({ 
-  icon, 
-  label, 
-  title, 
-  description, 
-  status,
-  delay = 0 
-}: { 
-  icon: React.ReactNode;
+interface InfoCardProps {
   label: string;
   title: string;
   description: string;
-  status?: 'online' | 'warning';
   delay?: number;
-}) {
+}
+
+export function InfoCard({ label, title, description, delay = 0 }: InfoCardProps) {
   return (
     <motion.div
       initial={{ y: 0 }}
       animate={{ y: [-15, 0, -15] }}
-      transition={{ 
-        duration: 4, 
-        repeat: Infinity, 
+      transition={{
+        duration: 4,
+        repeat: Infinity,
         ease: "easeInOut",
-        delay 
+        delay,
       }}
-      className="bg-[#1e293b]/80 backdrop-blur-xl border border-white/10 rounded-xl p-6 min-w-60 max-w-70"
+      className="text-center bg-white/90 backdrop-blur-xl border border-gray-200 rounded-xl p-4 min-w-[240px] max-w-[280px] shadow-lg"
     >
-      <div className="flex items-center gap-2 text-xs text-white/50 uppercase tracking-wider mb-2">
-        {status && (
-          <motion.span 
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className={`w-2 h-2 rounded-full ${
-              status === 'warning' ? 'bg-orange-500' : 'bg-orange-500'
-            }`}
-          />
-        )}
-        {icon}
+      <div className="text-xs text-gray-500 uppercase tracking-wider mb-3">
         {label}
       </div>
-      <h3 className="text-lg font-semibold mb-1.5">{title}</h3>
-      <p className="text-sm text-white/60 leading-relaxed">{description}</p>
+
+      <h3 className="text-lg font-semibold mb-4 text-black">{title}</h3>
+
+      {/* QR Code */}
+      <div className="w-32 h-32 mx-auto mb-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center border-2 border-gray-300">
+        <div className="w-full h-full flex items-center justify-center">
+          <Image
+            src="/qr/QR_placeholder.png"
+            alt="QR Placeholder"
+            width={128}
+            height={128}
+            className="object-contain"
+          />
+        </div>
+      </div>
     </motion.div>
   );
 }
