@@ -8,7 +8,7 @@ export function InfoCardGrid() {
   return (
     <>
       {/* Desktop Cards */}
-      {INFO_CARDS_DATA.map((card, index) => (
+      {INFO_CARDS_DATA.map((card) => (
         <motion.div
           key={card.id}
           initial={{ opacity: 0, x: card.position.includes("left") ? -50 : 50 }}
@@ -17,10 +17,12 @@ export function InfoCardGrid() {
           className={`hidden lg:block absolute ${card.position}`}
         >
           <InfoCard
-            label={card.label}
             title={card.title}
-            description={card.description}
+            
             delay={card.animationDelay}
+            titleStyle={card.titleStyle}
+            descriptionStyle={card.descriptionStyle}
+            fontFamily={card.fontFamily}
           />
         </motion.div>
       ))}
@@ -30,10 +32,12 @@ export function InfoCardGrid() {
         {INFO_CARDS_DATA.slice(0, 2).map((card) => (
           <InfoCard
             key={card.id}
-            label={card.label}
             title={card.title}
-            description={card.description}
+            
             delay={card.animationDelay + 0.7}
+            titleStyle={card.titleStyle}
+            descriptionStyle={card.descriptionStyle}
+            fontFamily={card.fontFamily}
           />
         ))}
       </div>

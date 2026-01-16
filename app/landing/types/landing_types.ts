@@ -2,10 +2,10 @@ export interface InfoCardData {
   id: string;
   label: string;
   title: string;
-  description: string;
   position: string;
   delay: number;
   animationDelay: number;
+  titleStyle?: string;
 }
 
 export interface NavbarProps {
