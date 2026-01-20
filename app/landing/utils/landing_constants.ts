@@ -2,33 +2,37 @@
 export const INFO_CARDS_DATA = [
   {
     id: "restaurante",
-    titleImageSrc: "/logos/Buen_Sabor.png", // Corregido: usa /logo/ en lugar de /titles/
+    titleImageSrc: "/logos/Buen_Sabor.png",
     titleImageAlt: "El buen sabor",
+    qrImageSrc: "/qr/Buen_Sabor.png", // QR específico del restaurante
     position: "left-[-8%] top-[1%]",
     delay: 0.4,
     animationDelay: 0.5,
   },
   {
     id: "hamburgueseria",
-    titleImageSrc: "/logos/Hot_Burger.png", // Cambiado a /logo/ para consistencia
+    titleImageSrc: "/logos/Hot_Burger.png",
     titleImageAlt: "Hot Burger",
+    qrImageSrc: "/qr/Hot_Burger.png", // QR específico de la hamburguesería
     position: "right-[-8%] top-[1%]",
     delay: 0.4,
     animationDelay: 0.7,
   },
   {
     id: "pizzeria",
-    titleImageSrc: "/logos/Napoli_Express.png", // Cambiado a /logo/ para consistencia
+    titleImageSrc: "/logos/Napoli_Express.png",
     titleImageAlt: "Napoli Express",
-    position: "left-[12%] top-[35%]",
+    qrImageSrc: "/qr/Napoli_Express.png", // QR específico de la pizzería
+    position: "left-[14%] top-[24%]",
     delay: 0.6,
     animationDelay: 0.9,
   },
   {
     id: "cafeteria",
-    titleImageSrc: "/logos/Cafe_Aroma.png", // Cambiado a /logo/ para consistencia
+    titleImageSrc: "/logos/Cafe_Aroma.png",
     titleImageAlt: "Cafe Aroma",
-    position: "right-[12%] top-[35%]",
+    qrImageSrc: "/qr/Cafe_Aroma.png", // QR específico de la cafetería
+    position: "right-[14%] top-[24%]",
     delay: 0.6,
     animationDelay: 1.1,
   },
@@ -40,6 +44,6 @@ export const WHATSAPP_CONFIG = {
 };
 
 export const VIDEO_CONFIG = {
-  videoUrl: "/video/intro_toppingfly.mov",
+  videoUrl: "/video/toppingfly_intro.mov",
   posterImage: "/images/video-poster.jpg",
 };

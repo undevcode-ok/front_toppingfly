@@ -6,8 +6,11 @@ import { InfoCardGrid } from "./Info_Card_Grid";
 
 export function HeroSection() {
   return (
-    <section id="qr" className="min-h-screen flex flex-col items-center justify-center px-6 pt-32 pb-20"
-    style={{ scrollMarginTop: '-50px' }}>
+    <section
+      id="qr"
+      className="min-h-screen flex flex-col items-center justify-center px-6 pt-16 pb-20"
+      
+    >
       <motion.h1
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -26,7 +29,8 @@ export function HeroSection() {
         className="text-base md:text-xl text-black/60 text-center max-w-3xl mb-12 md:mb-20 leading-relaxed"
       >
         Una herramienta fácil de usar para crear, organizar y actualizar menús
-        en línea.
+        en línea. Escanea los QR para ver ejemplos de menús creados con nuestra
+        plataforma.
       </motion.p>
 
       {/* Layout para Mobile: Teléfono arriba, cards abajo */}

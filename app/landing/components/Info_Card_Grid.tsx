@@ -19,6 +19,7 @@ export function InfoCardGrid() {
           <InfoCard
             titleImageSrc={card.titleImageSrc}
             titleImageAlt={card.titleImageAlt}
+            qrImageSrc={card.qrImageSrc}
             delay={card.animationDelay}
           />
         </motion.div>
@@ -37,6 +38,7 @@ export function InfoCardGrid() {
             <InfoCard
               titleImageSrc={card.titleImageSrc}
               titleImageAlt={card.titleImageAlt}
+              qrImageSrc={card.qrImageSrc}
               delay={card.animationDelay + 0.7}
             />
           </motion.div>

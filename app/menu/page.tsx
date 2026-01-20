@@ -89,7 +89,7 @@ function MenuPageContent() {
                   ? "hover:bg-white/10 text-white"
                   : "hover:bg-black/10 text-black"
               }`}
-              onClick={() => router.push(`/home`)}
+              onClick={() => router.back()}
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>
