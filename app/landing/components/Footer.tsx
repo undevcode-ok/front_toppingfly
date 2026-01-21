@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Facebook, Twitter, Mail, Music2 } from "lucide-react";
+import { Instagram, Music2 } from "lucide-react";
 import Image from "next/image";
 import { useSmoothScroll } from "../hooks/use_smooth_control";
 import { useWhatsApp } from "../hooks/use_WhatsApp";
@@ -12,7 +12,7 @@ export const Footer = () => {
     defaultMessage: "Hola, necesito ayuda con ToppingFly",
   });
   return (
-   <footer className="bg-gradient-to-b from-[#FFE6D3] to-orange-100 border-t border-orange-200 mt-20">
+   <footer className="bg-linear-to-b from-[#FFE6D3] to-orange-100 border-t border-orange-200 mt-20">
   <div className="max-w-6xl mx-auto px-4 py-12">
     <div className="grid grid-cols-1 md:grid-cols-4 gap-8 ">
       {/* Columna 1 - Logo y descripción */}
@@ -96,7 +96,7 @@ export const Footer = () => {
             Desarrollado con ❤ por el equipo de{" "}
             <Link
               href="https://undevcode.com/"
-              className=" bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent font-bold"
+              className=" bg-linear-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent font-bold"
             >
               {" "}
               UNDEVCODE

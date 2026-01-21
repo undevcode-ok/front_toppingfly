@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
-import { MessageCircle } from "lucide-react";
 import { Menubar, MenubarMenu } from "@/common/components/organism/menubar";
 import { WHATSAPP_CONFIG } from "../utils/landing_constants";
 import { useWhatsApp } from "../hooks/use_WhatsApp";
@@ -37,7 +35,7 @@ export function LandingNavbar() {
         <Menubar className="flex items-center justify-between py-4 px-0 sm:max-w-375 sm:mx-auto sm:py-3 border-none shadow-none">
           {/* Logo */}
           <MenubarMenu>
-            <div className="flex items-center ml-0 flex-shrink-0">
+            <div className="flex items-center ml-0 shrink-0">
               <Image
                 src="/toppingfly.webp"
                 alt="ToppingFly Logo"

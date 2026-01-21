@@ -22,7 +22,7 @@ export const FeatureCard = ({ icon, title, description }: FeatureCardProps) => {
       <Card className="border-2 hover:shadow-xl transition-shadow duration-300 bg-white/80 backdrop-blur-sm h-full">
         <CardHeader>
           <motion.div 
-            className="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center mb-4 text-white"
+            className="w-16 h-16 bg-linear-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center mb-4 text-white"
             whileHover={{ 
               scale: 1.15,
               transition: { duration: 0.2, ease: "easeOut" }
