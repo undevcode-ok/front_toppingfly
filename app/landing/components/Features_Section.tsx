@@ -3,6 +3,7 @@
 import { FeatureCard } from "./Feature_Card";
 import { Menu, FolderTree, Download, Scan } from "lucide-react";
 import { motion } from "framer-motion";
+import { Variants } from "framer-motion";
 
 export const FeaturesSection = () => {
   const features = [
@@ -38,20 +39,20 @@ export const FeaturesSection = () => {
     }
   };
 
-  const cardVariants = {
-    hidden: { 
-      opacity: 0, 
-      y: 50 
-    },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
+  const cardVariants: Variants = {
+  hidden: { 
+    opacity: 0, 
+    y: 50 
+  },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut" as any // Forzar tipo
     }
-  };
+  }
+};
 
   return (
     <section id="features" className="max-w-6xl mx-auto px-4 py-16 scroll-mt-8">
