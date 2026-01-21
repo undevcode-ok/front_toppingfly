@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+
 
 interface InfoCardProps {
   titleImageSrc: string;
@@ -26,7 +26,7 @@ export function InfoCard({
         ease: "easeInOut",
         delay,
       }}
-      className="text-center bg-white/90 backdrop-blur-xl border border-gray-200 rounded-xl p-6 min-w-[240px] max-w-[280px] shadow-lg"
+      className="text-center bg-white/90 backdrop-blur-xl border border-gray-200 rounded-xl p-6 min-w-60 max-w-70 shadow-lg"
     >
       {/* Title Image */}
       <div className="w-full mb-4 flex items-center justify-center overflow-hidden relative">
@@ -43,7 +43,7 @@ export function InfoCard({
       </div>
 
       {/* QR Code - Ahora usa el QR específico de cada restaurante */}
-      <div className="w-32 h-32 mx-auto bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center border-2 border-gray-300 hover:scale-105 transition-transform">
+      <div className="w-32 h-32 mx-auto bg-linear-to-br from-gray-100 to-gray-200 rounded-lg flex items-center justify-center border-2 border-gray-300 hover:scale-105 transition-transform">
         <div className="w-full h-full flex items-center justify-center">
           <img
             src={qrImageSrc}
