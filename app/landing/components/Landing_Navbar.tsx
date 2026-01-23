@@ -31,11 +31,11 @@ export function LandingNavbar() {
         scrolled ? "bg-white backdrop-blur-xl shadow-sm" : "bg-white backdrop-blur-md"
       }`}
     >
-      <div className="w-full px-0 sm:px-0 lg:px-12 ">
-        <Menubar className="flex items-center justify-between py-4 px-0 sm:max-w-375 sm:mx-auto sm:py-3 border-none shadow-none">
+      <div className="w-full px-4 sm:px-0 lg:px-12 ">
+        <Menubar className={`flex items-center justify-between px-0 sm:max-w-375 sm:mx-auto border-none shadow-none transition-all duration-300 py-4 sm:py-3`}>
           {/* Logo */}
           <MenubarMenu>
-            <div className="flex items-center ml-0 shrink-0">
+            <div className="flex items-center shrink-0 -ml-6 sm:ml-0">
               <Image
                 src="/toppingfly.webp"
                 alt="ToppingFly Logo"
@@ -71,12 +71,12 @@ export function LandingNavbar() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-0 sm:gap-3 pr-4 sm:pr-0">
+          <div className="flex items-center gap-2 sm:gap-3 pr-0 sm:pr-0">
             {/* CTA Button */}
             <MenubarMenu>
-              <a
+              <a 
                 href="/auth"
-                className=" hover:text-orange-600   px-7 py-3  text-sm transition-all flex items-center gap-2 text-orange-400 font-medium"
+                className="hover:text-orange-600 px-3 sm:px-7 py-3 text-sm transition-all flex items-center gap-2 text-orange-400 font-medium"
               >
                 Ingresar
               </a>
@@ -85,7 +85,7 @@ export function LandingNavbar() {
             <MenubarMenu>
               <button
                 onClick={() => openWhatsApp()}
-                className="bg-orange-500 hover:bg-orange-600 border border-orange-600 px-6 sm:px-7 py-2 sm:py-3 rounded-lg text-sm transition-all flex items-center gap-2 text-white font-medium"
+                className="bg-orange-500 hover:bg-orange-600 border border-orange-600 px-4 sm:px-7 py-2.5 sm:py-3 rounded-lg text-sm transition-all flex items-center gap-2 text-white font-medium"
                 aria-label="Contactar por WhatsApp"
               >
                 <span className="hidden sm:inline">Solicitar registro</span>
