@@ -1,6 +1,7 @@
 'use server';
 
 import { cookies } from "next/headers";
+import { handleAuthResponse } from "@/lib/actions/with-auth";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -24,10 +25,8 @@ export async function deleteMenuService(id: string | number) {
     },
   });
 
-  if (!response.ok) {
-    throw new Error(`Error al borrar menu: ${response.status}`);
-  }
-
+  await handleAuthResponse(response);
+  
   // Manejar respuestas vacías (204 No Content o body vacío)
   const contentType = response.headers.get("content-type");
   

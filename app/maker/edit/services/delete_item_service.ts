@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { handleAuthResponse } from "@/lib/actions/with-auth";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -22,9 +23,7 @@ export async function deleteItemService(itemId: number) {
     },
   });
 
-  if (!response.ok) {
-    throw new Error(`Error al eliminar item: ${response.status}`);
-  }
+  await handleAuthResponse(response);
 
   revalidatePath("/home");
   return null;

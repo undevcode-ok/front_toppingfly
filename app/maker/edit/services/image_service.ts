@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { ImageItems } from "../types/items";
+import { handleAuthResponse } from "@/lib/actions/with-auth";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -28,25 +29,15 @@ export async function updateImage(
       body: formData,
     });
 
-    // Si la respuesta no es JSON o está vacía, esto fallará con un mensaje claro
-    const contentType = response.headers.get("content-type");
-    if (!response.ok) {
-      const errorText = await response.text();
-      let errorMessage = `Error ${response.status}`;
-      try {
-        const errorJson = JSON.parse(errorText);
-        errorMessage = errorJson.error || errorMessage;
-      } catch {
-        errorMessage = errorText || errorMessage;
-      }
-      throw new Error(errorMessage);
-    }
+    await handleAuthResponse(response);
 
+    const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
       throw new Error("El servidor no devolvió un JSON válido.");
     }
 
     return await response.json();
+    
   } catch (error: any) {
     console.error("❌ [updateImage Server Error]:", error.message);
     throw new Error(error.message || "Error inesperado al subir la imagen");

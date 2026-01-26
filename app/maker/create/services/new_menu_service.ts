@@ -2,6 +2,7 @@
 
 import { newMenu } from "../types/new_menu";
 import { cookies } from "next/headers";
+import { handleAuthResponse } from "@/lib/actions/with-auth";
 
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -56,13 +57,7 @@ export const createMenuService = async (data: newMenu) => {
       body: formData,
     });
 
-    // Manejar errores HTTP
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message || `Error ${response.status}: ${response.statusText}`
-      );
-    }
+    await handleAuthResponse(response);
 
     // Retornar el menú creado
     const menu = await response.json();

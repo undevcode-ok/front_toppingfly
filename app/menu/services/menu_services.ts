@@ -1,6 +1,7 @@
 "use server";
 import { Menu } from "../types/menu";
 import { cookies } from "next/headers";
+import { handleAuthResponse } from "@/lib/actions/with-auth";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -23,13 +24,8 @@ export const getMenu = async (id: string): Promise<Menu> => {
       },
     });
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        throw new Error("menu incorrecto");
-      } else {
-        throw new Error("Error al cargar el menu");
-      }
-    }
+    await handleAuthResponse(response);
+
     return await response.json();
   } catch (error) {
     console.error("Error al cargar menu:", error);
