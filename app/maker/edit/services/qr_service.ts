@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { handleAuthResponse } from "@/lib/actions/with-auth";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -20,9 +21,7 @@ export async function getMenuQr(menuId: number): Promise<Blob> {
     },
   });
 
-  if (!response.ok) {
-    throw new Error(`Error al obtener QR: ${response.status}`);
-  }
+  await handleAuthResponse(response);
 
   return await response.blob();
 }

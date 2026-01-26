@@ -1,6 +1,7 @@
 'use server';
 
 import { cookies } from "next/headers";
+import { handleAuthResponse } from "@/lib/actions/with-auth";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
@@ -30,9 +31,7 @@ export async function editCategory(data: EditCategoryData, id: string | number) 
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    throw new Error(`Error al actualizar categoría: ${response.status}`);
-  }
+  await handleAuthResponse(response);
 
   const contentType = response.headers.get("content-type");
   
