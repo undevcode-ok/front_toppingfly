@@ -5,6 +5,7 @@ import { LandingNavbar } from "@/app/landing/components/Landing_Navbar";
 import { HeroSection } from "@/app/landing/components/Hero_Section";
 import { FeaturesSection } from "./landing/components/Features_Section";
 import { Footer } from "./landing/components/Footer";
+import {PromotionDialog} from  "./landing/components/Promotion_Dialog"
 
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
@@ -17,6 +18,7 @@ export default function LandingPage() {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-b from-white via-[#FFF3EC] to-[#FFE6D3] text-black">
+      <PromotionDialog />
       <LandingNavbar />
       <HeroSection />
       <FeaturesSection />
