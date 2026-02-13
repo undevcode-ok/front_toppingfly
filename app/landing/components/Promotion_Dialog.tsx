@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogClose
 } from "@/common/components/organism/dialog";
 import { Button } from "@/common/components/atoms/button";
 import { X, CheckCircle2, Clock } from "lucide-react";
@@ -112,15 +113,13 @@ export function PromotionDialog() {
           </div>
 
           {/* Botón de cerrar */}
-          <button
-            onClick={() => setOpen(false)}
-            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 z-10"
-          >
-            <X className="h-5 w-5 text-white" />
-            <span className="sr-only">Cerrar</span>
-          </button>
+           <DialogClose className="absolute right-1 top-2 sm:right-3 sm:top-3 p-1  transition-opacity z-20">
+          <X className="h-7 w-7 text-white" />
+          <span className="sr-only">Cerrar</span>
+        </DialogClose>
 
           <DialogHeader className="relative z-10">
+            {/* Logo */}
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -208,6 +207,7 @@ export function PromotionDialog() {
               className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 sm:py-6 text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all transform hover:scale-[1.02]"
             >
               <span className="flex items-center justify-center gap-2">
+               
                 <span className="text-sm sm:text-base md:text-lg">Aprovechar Oferta por WhatsApp</span>
               </span>
             </Button>
