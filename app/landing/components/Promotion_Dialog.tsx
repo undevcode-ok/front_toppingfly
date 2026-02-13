@@ -10,10 +10,9 @@ import {
 import { Button } from "@/common/components/atoms/button";
 import { X, CheckCircle2, Clock } from "lucide-react";
 import { motion } from "framer-motion";
-
+import Image from "next/image";
 import { useWhatsApp } from "../hooks/use_WhatsApp";
 import { WHATSAPP_CONFIG } from "../utils/landing_constants";
-
 
 // Componente de Countdown Timer
 function CountdownTimer({ targetDate }: { targetDate: Date }) {
@@ -46,21 +45,21 @@ function CountdownTimer({ targetDate }: { targetDate: Date }) {
 
   const TimeUnit = ({ value, label }: { value: number; label: string }) => (
     <div className="flex flex-col items-center">
-      <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-lg w-16 h-16 flex items-center justify-center shadow-lg">
-        <span className="text-2xl font-bold">{value.toString().padStart(2, '0')}</span>
+      <div className="bg-gradient-to-br from-orange-500 to-orange-600 text-white rounded-lg w-12 h-12 sm:w-16 sm:h-16 flex items-center justify-center shadow-lg">
+        <span className="text-xl sm:text-2xl font-bold">{value.toString().padStart(2, '0')}</span>
       </div>
-      <span className="text-xs text-gray-600 mt-1 font-medium">{label}</span>
+      <span className="text-[10px] sm:text-xs text-gray-600 mt-1 font-medium">{label}</span>
     </div>
   );
 
   return (
-    <div className="flex gap-2 justify-center">
+    <div className="flex gap-1 sm:gap-2 justify-center">
       <TimeUnit value={timeLeft.days} label="Días" />
-      <div className="flex items-center pb-5 text-orange-500 text-2xl font-bold">:</div>
+      <div className="flex items-center pb-3 sm:pb-5 text-orange-500 text-xl sm:text-2xl font-bold">:</div>
       <TimeUnit value={timeLeft.hours} label="Horas" />
-      <div className="flex items-center pb-5 text-orange-500 text-2xl font-bold">:</div>
+      <div className="flex items-center pb-3 sm:pb-5 text-orange-500 text-xl sm:text-2xl font-bold">:</div>
       <TimeUnit value={timeLeft.minutes} label="Min" />
-      <div className="flex items-center pb-5 text-orange-500 text-2xl font-bold">:</div>
+      <div className="flex items-center pb-3 sm:pb-5 text-orange-500 text-xl sm:text-2xl font-bold">:</div>
       <TimeUnit value={timeLeft.seconds} label="Seg" />
     </div>
   );
@@ -103,9 +102,9 @@ export function PromotionDialog() {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[750px] p-0 overflow-hidden border-2 border-orange-300 [&>button]:hidden">
+      <DialogContent className="w-[95%] sm:max-w-[750px] p-0 overflow-hidden border-2 border-orange-300 max-h-[95vh] overflow-y-auto [&>button]:hidden">
         {/* Header con gradiente */}
-        <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white relative overflow-hidden">
+        <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-4 sm:p-6 text-white relative overflow-hidden">
           {/* Patrón de fondo decorativo */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 left-0 w-40 h-40 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>
@@ -115,34 +114,31 @@ export function PromotionDialog() {
           {/* Botón de cerrar */}
           <button
             onClick={() => setOpen(false)}
-            className="absolute right-4 top-4 rounded-sm opacity-70  transition-opacity hover:opacity-100 z-10"
+            className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-white transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 z-10"
           >
             <X className="h-5 w-5 text-white" />
             <span className="sr-only">Cerrar</span>
           </button>
 
           <DialogHeader className="relative z-10">
-            {/* Logo */}
-            
-
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <DialogTitle className="text-2xl md:text-3xl font-bold text-center text-white mb-2">
+              <DialogTitle className="text-xl sm:text-2xl md:text-3xl font-bold text-center text-white mb-2">
                 🎉 Oferta de Lanzamiento
               </DialogTitle>
               <div className="flex items-center justify-center gap-2 text-orange-100">
-                <Clock className="w-4 h-4" />
-                <p className="text-sm font-medium">Por tiempo limitado</p>
+                <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
+                <p className="text-xs sm:text-sm font-medium">Por tiempo limitado</p>
               </div>
             </motion.div>
           </DialogHeader>
         </div>
 
         {/* Contenido principal */}
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
           {/* Countdown Timer */}
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
@@ -160,17 +156,17 @@ export function PromotionDialog() {
             className="text-center space-y-2"
           >
             {/* Precio tachado */}
-            <div className="flex items-center justify-center gap-3">
-              <span className="text-3xl font-bold text-gray-400 line-through">
+            <div className="flex items-center justify-center gap-2 sm:gap-3">
+              <span className="text-2xl sm:text-3xl font-bold text-gray-400 line-through">
                 $30.000
               </span>
-              <span className="bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-1 rounded-full text-lg font-bold shadow-lg">
+              <span className="bg-gradient-to-r from-red-500 to-red-600 text-white px-2 sm:px-3 py-1 rounded-full text-base sm:text-lg font-bold shadow-lg">
                 -34%
               </span>
             </div>
 
             {/* Precio actual */}
-            <div className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
+            <div className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
               $20.000
             </div>
             
@@ -182,7 +178,7 @@ export function PromotionDialog() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.5 }}
-            className="bg-orange-50 border border-orange-200 rounded-xl p-5 space-y-3"
+            className="bg-orange-50 border border-orange-200 rounded-xl p-3 sm:p-5 space-y-2 sm:space-y-3"
           >
             {features.map((feature, index) => (
               <motion.div
@@ -190,10 +186,10 @@ export function PromotionDialog() {
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.6 + index * 0.1 }}
-                className="flex items-start gap-3"
+                className="flex items-start gap-2 sm:gap-3"
               >
-                <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-700 text-lg leading-relaxed">{feature}</span>
+                <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-green-500 flex-shrink-0 mt-0.5" />
+                <span className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed">{feature}</span>
               </motion.div>
             ))}
           </motion.div>
@@ -209,10 +205,10 @@ export function PromotionDialog() {
                 setOpen(false);
                 openWhatsApp();
               }}
-              className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-6 text-lg shadow-xl hover:shadow-2xl transition-all transform hover:scale-[1.02]"
+              className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 sm:py-6 text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all transform hover:scale-[1.02]"
             >
               <span className="flex items-center justify-center gap-2">
-                Aprovechar Oferta por WhatsApp
+                <span className="text-sm sm:text-base md:text-lg">Aprovechar Oferta por WhatsApp</span>
               </span>
             </Button>
           </motion.div>
