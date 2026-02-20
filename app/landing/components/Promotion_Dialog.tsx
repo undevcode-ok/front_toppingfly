@@ -70,7 +70,7 @@ export function PromotionDialog() {
   const [open, setOpen] = useState(false);
   
   // Fecha configurable - 20 de febrero de 2026 a las 23:59:59
-  const offerEndDate = new Date('2026-02-20T23:59:59');
+  const offerEndDate = new Date('2026-02-22T23:59:59');
 
   const { openWhatsApp } = useWhatsApp({
     phoneNumber: WHATSAPP_CONFIG.phoneNumber,
