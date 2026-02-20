@@ -224,7 +224,7 @@ export function PromotionDialog() {
               ⚡ Respuesta inmediata • Sin compromisos
             </p>
             <p className="text-xs text-orange-600 font-semibold">
-              ⏰ Esta oferta expira el 20 de Febrero de 2026
+              ⏰ Esta oferta expira el 22 de Febrero de 2026
             </p>
           </motion.div>
         </div>
