@@ -70,7 +70,7 @@ export function PromotionDialog() {
   const [open, setOpen] = useState(false);
   
   // Fecha configurable - 20 de febrero de 2026 a las 23:59:59
-  const offerEndDate = new Date('2026-02-25T23:59:59');
+  const offerEndDate = new Date('2026-02-27T23:59:59');
 
   const { openWhatsApp } = useWhatsApp({
     phoneNumber: WHATSAPP_CONFIG.phoneNumber,
@@ -224,7 +224,7 @@ export function PromotionDialog() {
               ⚡ Respuesta inmediata • Sin compromisos
             </p>
             <p className="text-xs text-orange-600 font-semibold">
-              ⏰ Esta oferta expira el 25 de Febrero de 2026
+              ⏰ Esta oferta expira el 27 de Febrero de 2026
             </p>
           </motion.div>
         </div>
