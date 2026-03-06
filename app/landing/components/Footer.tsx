@@ -81,7 +81,7 @@ export const Footer = () => {
                 <Instagram className="w-5 h-5" />
               </Link>
               <Link
-                href="https://www.tiktok.com/@toppyngfly"
+                href="https://www.tiktok.com/@toppingfly?_r=1&_t=ZS-94TAzqfZcPs"
                 className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-orange-500 hover:text-white transition"
               >
                 <Music2 className="w-5 h-5" />
