@@ -87,7 +87,7 @@ export function PromotionDialog() {
   const [open, setOpen] = useState(false);
   const [billingPlan, setBillingPlan] = useState<"monthly" | "annual">("monthly");
 
-  const offerEndDate = new Date("2026-03-20T23:59:59");
+  const offerEndDate = new Date("2026-03-27T23:59:59");
   const currentPlan = plans[billingPlan];
 
   const { openWhatsApp } = useWhatsApp({
@@ -275,7 +275,7 @@ export function PromotionDialog() {
               ⚡ Respuesta inmediata • Sin compromisos
             </p>
             <p className="text-xs text-orange-600 font-semibold">
-              ⏰ Esta oferta expira el 20 de Marzo de 2026
+              ⏰ Esta oferta expira el 27 de Marzo de 2026
             </p>
           </motion.div>
         </div>
