@@ -8,7 +8,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 // 🚧 MODO PRUEBA: mientras es true, no se llama al backend real.
 // Solo loguea en consola lo que se enviaría y simula una respuesta exitosa.
 // Cuando quieran conectar el backend de verdad, cambiar a false (o borrar este bloque).
-const MOCK_MODE = true;
+const MOCK_MODE = false;
 
 const mockRegisterFreeService = async (
   data: registerFreeForm
