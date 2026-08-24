@@ -19,6 +19,7 @@ interface SortableCategoryProps {
   setExpandedCategoryId: (id: number | null) => void;
   onCategoryChange: () => Promise<void>;
   sensors: any;
+  itemLimitReached?: boolean;
 }
 
 export const SortableCategory: React.FC<SortableCategoryProps> = ({
@@ -27,6 +28,7 @@ export const SortableCategory: React.FC<SortableCategoryProps> = ({
   setExpandedCategoryId,
   onCategoryChange,
   sensors,
+  itemLimitReached = false,
 }) => {
   const dragStarted = useRef(false);
 
@@ -168,6 +170,7 @@ export const SortableCategory: React.FC<SortableCategoryProps> = ({
             sensors={sensors}
             onItemChange={onCategoryChange}
             ensureCategoryExpanded={ensureCategoryExpanded}
+            itemLimitReached={itemLimitReached}
           />
         </div>
       )}

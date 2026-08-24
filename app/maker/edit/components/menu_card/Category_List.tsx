@@ -13,13 +13,15 @@ interface CategoryListProps {
   onMenuUpdate: () => Promise<void>;
   expandedCategoryId?: number | null;
   setExpandedCategoryId?: (id: number | null) => void;
+  itemLimitReached?: boolean;
 }
 
 const CategoryList = ({ 
   categories: initialCategories, 
   onMenuUpdate,
   expandedCategoryId: controlledExpandedId,
-  setExpandedCategoryId: setControlledExpandedId
+  setExpandedCategoryId: setControlledExpandedId,
+  itemLimitReached = false,
 }: CategoryListProps) => {
   const [localExpandedId, setLocalExpandedId] = useState<number | null>(null);
   const [categories, setCategories] = useState<Categories[]>([]);
@@ -73,6 +75,7 @@ const CategoryList = ({
               setExpandedCategoryId={setExpandedCategoryId}
               onCategoryChange={onMenuUpdate}
               sensors={sensors}
+              itemLimitReached={itemLimitReached}
             />
           ))}
         </SortableContext>
