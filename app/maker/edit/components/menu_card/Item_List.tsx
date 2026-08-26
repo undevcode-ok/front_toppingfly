@@ -10,6 +10,7 @@ import { SortableItem } from "./Sorteable_Item";
 import { ItemDialog } from "./Item_Dialog";
 import { useItemDragDrop } from "../../hooks/use_item_drag_drop";
 import { useItemOperations } from "../../hooks/use_item_operations";
+import { UpgradePlanLink } from "@/common/components/molecules/upgrade_plan_link";
 
 interface ItemListProps {
   items: Items[];
@@ -93,7 +94,8 @@ export const ItemList: React.FC<ItemListProps> = ({
         {itemLimitReached ? (
           <div className="w-full text-center py-4">
             <p className="text-sm text-slate-500">
-              Alcanzaste el límite de 10 platos de tu plan Free.
+              Alcanzaste el límite de 10 platos de tu plan Free.{" "}
+              <UpgradePlanLink />
             </p>
           </div>
         ) : (

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useCookie } from "@/lib/hooks/use_cookie";
 import { getAllMenus } from "@/app/home/services/menu_service";
+import { UpgradePlanLink } from "@/common/components/molecules/upgrade_plan_link";
 
 const FREE_ROLE_ID = "4";
 const FREE_MENU_LIMIT = 1;
@@ -23,7 +24,12 @@ export const FreePlanCreateGuard = () => {
       try {
         const menus = await getAllMenus();
         if (menus.length >= FREE_MENU_LIMIT) {
-          toast.error("Tu plan Free permite un solo menú activo.");
+          toast.error(
+            <span>
+              Tu plan Free permite un solo menú activo.{" "}
+             <UpgradePlanLink className="underline font-bold text-white hover:text-orange-100" />
+            </span>
+          );
           router.replace("/home");
         }
       } catch (error) {
