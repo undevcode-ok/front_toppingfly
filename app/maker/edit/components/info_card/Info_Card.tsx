@@ -8,7 +8,7 @@ import {
   CardContent,
 } from "@/common/components/organism/card";
 
-import { Edit, BookImage, QrCode, Loader2 } from "lucide-react";
+import { Edit, UtensilsCrossed, QrCode, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useQrHandler } from "../../hooks/use_qr_handler";
 import { DialogTrigger } from "@/common/components/organism/dialog";
@@ -56,7 +56,7 @@ export const InfoCard = ({ menuData }: MenuCardProps) => {
               ${
                 menuData?.logo
                   ? "ring-2 ring-slate-200"
-                  : "border-2 border-dashed border-slate-300"
+                  : "border-slate-100"
               }`}
               >
                 {menuData?.logo ? (
@@ -69,7 +69,7 @@ export const InfoCard = ({ menuData }: MenuCardProps) => {
                     priority
                   />
                 ) : (
-                  <BookImage className="w-12 h-12 text-slate-400" />
+                  <UtensilsCrossed className="w-12 h-12 text-slate-400" />
                 )}
               </div>
             </div>
