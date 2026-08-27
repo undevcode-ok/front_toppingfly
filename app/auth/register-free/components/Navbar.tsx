@@ -1,4 +1,5 @@
-// navbar de crear usuario
+// navbar de registro free: igual al de "crear usuario", pero el botón atrás
+// lleva a la landing page (/) en vez de a /home, ya que acá no hay sesión iniciada.
 import { ChevronLeft, UtensilsCrossed } from "lucide-react";
 import Link from "next/link";
 import {
@@ -6,7 +7,6 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/common/components/organism/menubar";
-
 
 export const Navbar = () => {
   return (

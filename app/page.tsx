@@ -18,7 +18,7 @@ export default function LandingPage() {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-b from-white via-[#FFF3EC] to-[#FFE6D3] text-black">
-      <PromotionDialog />
+      {/*<PromotionDialog />*/}
       <LandingNavbar />
       <HeroSection />
       <FeaturesSection />
