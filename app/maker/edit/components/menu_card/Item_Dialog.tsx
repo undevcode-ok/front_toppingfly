@@ -19,6 +19,10 @@ import { Upload, X } from "lucide-react";
 import { Items } from "@/app/home/types/menu";
 import { useItemForm } from "../../hooks/use_item_form";
 import { Errors } from "./errors_msg";
+import { useCookie } from "@/lib/hooks/use_cookie";
+import { UpgradePlanLink } from "@/common/components/molecules/upgrade_plan_link";
+
+const FREE_ROLE_ID = "4";
 
 interface ItemDialogProps {
   categoryId: number;
@@ -80,8 +84,11 @@ export const ItemDialog: React.FC<ItemDialogProps> = ({
   });
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const roleId = useCookie("roleId");
+  const isFree = roleId === FREE_ROLE_ID;
 
   const handleImageClick = () => {
+    if (isFree) return;
     fileInputRef.current?.click();
   };
 
@@ -173,41 +180,54 @@ export const ItemDialog: React.FC<ItemDialogProps> = ({
                 accept="image/*"
                 onChange={handleImageChange}
                 className="hidden"
+                disabled={isFree}
               />
 
               {imagePreview ? (
                 <div
                   onClick={handleImageClick}
-                  className="relative w-full h-90 rounded-lg border-2 border-slate-200 overflow-hidden group cursor-pointer hover:border-orange-400 transition-all"
+                  className={`relative w-full h-90 rounded-lg border-2 overflow-hidden group transition-all ${
+                    isFree
+                      ? "border-slate-200 opacity-70 cursor-not-allowed"
+                      : "border-slate-200 cursor-pointer hover:border-orange-400"
+                  }`}
                 >
                   <img
                     src={imagePreview}
                     alt="Preview"
                     className="absolute inset-0 w-full h-full object-cover"
                   />
-                  {/* Overlay con hover */}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Upload className="w-10 h-10 text-white" />
-                    <p className="text-white text-sm font-medium ml-2">
-                      Cambiar imagen
-                    </p>
-                  </div>
-                  {/* Botón de eliminar */}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      removeImage();
-                    }}
-                    className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-lg opacity-0 group-hover:opacity-100 z-10"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
+                  {!isFree && (
+                    <>
+                      {/* Overlay con hover */}
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Upload className="w-10 h-10 text-white" />
+                        <p className="text-white text-sm font-medium ml-2">
+                          Cambiar imagen
+                        </p>
+                      </div>
+                      {/* Botón de eliminar */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeImage();
+                        }}
+                        className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-lg opacity-0 group-hover:opacity-100 z-10"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </>
+                  )}
                 </div>
               ) : (
                 <div
                   onClick={handleImageClick}
-                  className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-orange-400 hover:bg-orange-50/50 transition-all"
+                  className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg transition-all ${
+                    isFree
+                      ? "border-slate-200 opacity-70 cursor-not-allowed"
+                      : "border-slate-300 cursor-pointer hover:border-orange-400 hover:bg-orange-50/50"
+                  }`}
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <Upload className="w-10 h-10 text-slate-400 mb-3" />
@@ -217,9 +237,16 @@ export const ItemDialog: React.FC<ItemDialogProps> = ({
                   </div>
                 </div>
               )}
-              <p className="text-xs text-center text-slate-500">
-                PNG, JPG o WEBP (MAX. 4MB)
-              </p>
+              {isFree ? (
+                <p className="text-xs text-center text-slate-500">
+                  Para agregar fotos a tus platos necesitás el plan Full.{" "}
+                  <UpgradePlanLink />
+                </p>
+              ) : (
+                <p className="text-xs text-center text-slate-500">
+                  PNG, JPG o WEBP (MAX. 4MB)
+                </p>
+              )}
             </div>
           </div>
 

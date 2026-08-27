@@ -81,7 +81,7 @@ export function LandingNavbar() {
                 href="/auth/register-free"
                 className="border border-orange-400 text-orange-500 hover:bg-orange-50 px-3 sm:px-6 py-2.5 sm:py-3 rounded-lg text-sm transition-all flex items-center gap-2 font-medium"
               >
-                <span className="hidden sm:inline">Registrarme gratis</span>
+                <span className="hidden sm:inline">Usalo gratis</span>
                 <span className="sm:hidden">Gratis</span>
               </a>
             </MenubarMenu>
