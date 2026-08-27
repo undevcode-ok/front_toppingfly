@@ -2,7 +2,8 @@ import Image from "next/image";
 import { Card } from "@/common/components/organism/card";
 import { Menu } from "../types/menu";
 import { getTextColor } from "../utils/color_utils";
-import { UtensilsCrossed } from "lucide-react";
+
+const DEFAULT_LOGO = "/logo free/Logo.png";
 
 interface MenuHeaderProps {
   menu: Menu;
@@ -37,18 +38,14 @@ export function MenuHeader({ menu, isPreview }: MenuHeaderProps) {
       />
 
       <div className="relative flex flex-col items-center justify-center text-center h-full px-4 w-full">
-        <Card className="p-2 w-28 h-28 flex items-center justify-center rounded-2xl shadow-xl overflow-hidden bg-white/90 border-0 mb-3">
-          {menu.logo ? (
-            <Image
-              src={menu.logo}
-              alt="Logo"
-              width={112}
-              height={112}
-              className="object-contain w-full h-full"
-            />
-          ) : (
-            <UtensilsCrossed className="w-12 h-12 text-slate-400" />
-          )}
+        <Card className="p-2 w-48 h-48 flex items-center justify-center rounded-2xl overflow-hidden bg-transparent border-0 shadow-none mb-3">
+          <Image
+            src={menu.logo || DEFAULT_LOGO}
+            alt="Logo"
+            width={600}
+            height={600}
+            className={menu.logo ? "object-contain w-full h-full" : "object-contain w-full h-full p-3"}
+          />
         </Card>
 
         <h1

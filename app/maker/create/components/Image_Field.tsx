@@ -6,12 +6,13 @@ import { UseFormRegister } from "react-hook-form";
 import { useImagePreview } from "../hooks/image_preview_handlers";
 import { Label } from "@/common/components/atoms/label";
 import { cn } from "@/lib/utils";
-import { Upload, UtensilsCrossed } from "lucide-react";
+import { Upload } from "lucide-react";
 import { useCookie } from "@/lib/hooks/use_cookie";
 import { UpgradePlanLink } from "@/common/components/molecules/upgrade_plan_link";
 
 const FREE_ROLE_ID = "4";
 const FREE_DEFAULT_BACKGROUND = "/free-plan-default-bg.jpg";
+const FREE_DEFAULT_LOGO = "/logo free/Logo.png";
 
 interface ImageFieldsProps {
   register: UseFormRegister<any>;
@@ -51,7 +52,11 @@ export const ImageFields = ({ register }: ImageFieldsProps) => {
             )}
           >
             {isFree ? (
-              <UtensilsCrossed className="w-10 h-10 text-slate-400" />
+              <img
+                src={FREE_DEFAULT_LOGO}
+                alt="Logo predeterminado del plan Free"
+                className="w-full h-full object-contain"
+              />
             ) : logoPreview ? (
               <img
                 src={logoPreview}
