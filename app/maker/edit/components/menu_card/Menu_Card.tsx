@@ -14,6 +14,7 @@ import { useCookie } from "@/lib/hooks/use_cookie";
 
 const FREE_ROLE_ID = "4";
 const FREE_ITEM_LIMIT = 10;
+const FREE_CATEGORY_LIMIT = 3;
 
 interface MenuCardProps {
   menuData: Menu;
@@ -75,6 +76,10 @@ export const MenuCard = ({ menuData: initialMenuData }: MenuCardProps) => {
   );
   const itemLimitReached = roleId === FREE_ROLE_ID && totalItems >= FREE_ITEM_LIMIT;
 
+  // Plan Free: hasta 3 categorías por menú.
+  const categoryLimitReached =
+    roleId === FREE_ROLE_ID && menuData.categories.length >= FREE_CATEGORY_LIMIT;
+
   return (
     <motion.div
       className="w-full sm:max-w-xl px-6 pt-6"
@@ -90,7 +95,11 @@ export const MenuCard = ({ menuData: initialMenuData }: MenuCardProps) => {
               Menú
             </p>
             <div className="shrink-0">
-              <NewCategoryDialog menuId={menuData.id} onSuccess={refetchMenu}>
+              <NewCategoryDialog
+                menuId={menuData.id}
+                onSuccess={refetchMenu}
+                categoryLimitReached={categoryLimitReached}
+              >
                 <DialogTrigger asChild>
                   <Button
                     size="icon"

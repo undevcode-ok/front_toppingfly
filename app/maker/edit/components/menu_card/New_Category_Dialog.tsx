@@ -9,14 +9,21 @@ import {
 } from "@/common/components/organism/dialog";
 import { X } from "lucide-react";
 import { NewCategoryField } from "./New_Category_Field";
+import { UpgradePlanLink } from "@/common/components/molecules/upgrade_plan_link";
 
 export interface InfoDialogProps {
   menuId: number;
   children: ReactNode;
   onSuccess?: () => void;
+  categoryLimitReached?: boolean;
 }
 
-export const NewCategoryDialog = ({ children, menuId, onSuccess }: InfoDialogProps) => {
+export const NewCategoryDialog = ({
+  children,
+  menuId,
+  onSuccess,
+  categoryLimitReached = false,
+}: InfoDialogProps) => {
   const [open, setOpen] = useState(false);
 
   const handleSuccess = () => {
@@ -41,7 +48,14 @@ export const NewCategoryDialog = ({ children, menuId, onSuccess }: InfoDialogPro
           </div>
           <DialogDescription></DialogDescription>
         </DialogHeader>
-        <NewCategoryField menuId={menuId} onSuccess={handleSuccess} />
+        {categoryLimitReached ? (
+          <p className="text-sm text-slate-600 text-center py-2">
+            Alcanzaste el límite de 3 categorías de tu plan Free.{" "}
+            <UpgradePlanLink />
+          </p>
+        ) : (
+          <NewCategoryField menuId={menuId} onSuccess={handleSuccess} />
+        )}
       </DialogContent>
     </Dialog>
   );
