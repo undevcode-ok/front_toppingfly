@@ -13,7 +13,7 @@ import { motion } from "framer-motion";
 import { useCookie } from "@/lib/hooks/use_cookie";
 
 const FREE_ROLE_ID = "4";
-const FREE_ITEM_LIMIT = 10;
+const FREE_ITEM_LIMIT = 20;
 const FREE_CATEGORY_LIMIT = 3;
 
 interface MenuCardProps {
