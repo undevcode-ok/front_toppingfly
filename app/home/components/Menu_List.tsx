@@ -63,14 +63,18 @@ export const MenuList = () => {
   >
     <div className="flex-1 flex items-center justify-center">
       <div className="w-16 h-16 lg:w-24 lg:h-24 rounded-full bg-white/20 backdrop-blur flex items-center justify-center overflow-hidden transition-transform group-hover:scale-110">
-        <Image
-          src={menu.logo}
-          alt={menu.title}
+        {menu.logo ? (
+          <Image
+            src={menu.logo}
+           alt={menu.title}
           width={menu.logo.includes("default_menu") ? 50 : 100}
-          height={menu.logo.includes("default_menu") ? 50 : 100}
-          className="object-contain"
-          priority
-        />
+            height={menu.logo.includes("default_menu") ? 50 : 100}
+            className="object-contain"
+           priority
+         />
+       ) : (
+         <UtensilsCrossed className="w-8 h-8 lg:w-12 lg:h-12 text-white" />
+       )}
       </div>
     </div>
 

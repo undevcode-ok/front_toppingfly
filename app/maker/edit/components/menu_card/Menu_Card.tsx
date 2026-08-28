@@ -10,6 +10,11 @@ import CategoryList from "./Category_List";
 import { useState, useEffect, useCallback } from "react";
 import { getMenuId } from "../../services/menu";
 import { motion } from "framer-motion";
+import { useCookie } from "@/lib/hooks/use_cookie";
+
+const FREE_ROLE_ID = "4";
+const FREE_ITEM_LIMIT = 20;
+const FREE_CATEGORY_LIMIT = 3;
 
 interface MenuCardProps {
   menuData: Menu;
@@ -19,6 +24,7 @@ export const MenuCard = ({ menuData: initialMenuData }: MenuCardProps) => {
   const [menuData, setMenuData] = useState<Menu>(initialMenuData);
   const [isRefetching, setIsRefetching] = useState(false);
   const [expandedCategoryId, setExpandedCategoryId] = useState<number | null>(null);
+  const roleId = useCookie("roleId");
 
   const refetchMenu = useCallback(async () => {
     if (!initialMenuData?.id) return;
@@ -63,6 +69,17 @@ export const MenuCard = ({ menuData: initialMenuData }: MenuCardProps) => {
     return null;
   }
 
+  // Plan Free: hasta 10 ítems por menú, contando todas las categorías.
+  const totalItems = menuData.categories.reduce(
+    (total, category) => total + (category.items?.length || 0),
+    0
+  );
+  const itemLimitReached = roleId === FREE_ROLE_ID && totalItems >= FREE_ITEM_LIMIT;
+
+  // Plan Free: hasta 3 categorías por menú.
+  const categoryLimitReached =
+    roleId === FREE_ROLE_ID && menuData.categories.length >= FREE_CATEGORY_LIMIT;
+
   return (
     <motion.div
       className="w-full sm:max-w-xl px-6 pt-6"
@@ -78,7 +95,11 @@ export const MenuCard = ({ menuData: initialMenuData }: MenuCardProps) => {
               Menú
             </p>
             <div className="shrink-0">
-              <NewCategoryDialog menuId={menuData.id} onSuccess={refetchMenu}>
+              <NewCategoryDialog
+                menuId={menuData.id}
+                onSuccess={refetchMenu}
+                categoryLimitReached={categoryLimitReached}
+              >
                 <DialogTrigger asChild>
                   <Button
                     size="icon"
@@ -102,6 +123,7 @@ export const MenuCard = ({ menuData: initialMenuData }: MenuCardProps) => {
                 onMenuUpdate={refetchMenu}
                 expandedCategoryId={expandedCategoryId}
                 setExpandedCategoryId={setExpandedCategoryId}
+                itemLimitReached={itemLimitReached}
               />
             )}
           </div>

@@ -11,5 +11,5 @@ export const handleLogout = async () => {
   cookiesStore.delete("roleId");
 
   // Redirigir a /auth
-  redirect("/auth");
+  redirect("/");
 };

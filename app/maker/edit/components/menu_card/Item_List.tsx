@@ -10,6 +10,7 @@ import { SortableItem } from "./Sorteable_Item";
 import { ItemDialog } from "./Item_Dialog";
 import { useItemDragDrop } from "../../hooks/use_item_drag_drop";
 import { useItemOperations } from "../../hooks/use_item_operations";
+import { UpgradePlanLink } from "@/common/components/molecules/upgrade_plan_link";
 
 interface ItemListProps {
   items: Items[];
@@ -17,6 +18,7 @@ interface ItemListProps {
   sensors: any;
   onItemChange: () => Promise<void>;
   ensureCategoryExpanded: () => void; // Nueva prop para asegurar que la categoría esté expandida
+  itemLimitReached?: boolean; // true si un usuario Free llegó a los 10 ítems del menú
 }
 
 export const ItemList: React.FC<ItemListProps> = ({
@@ -25,6 +27,7 @@ export const ItemList: React.FC<ItemListProps> = ({
   sensors,
   onItemChange,
   ensureCategoryExpanded,
+  itemLimitReached = false,
 }) => {
   const [editingItem, setEditingItem] = useState<Items | null>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -88,23 +91,32 @@ export const ItemList: React.FC<ItemListProps> = ({
 
       {/* Separador y botón agregar */}
       <div className="pt-4 mt-4 border-t border-slate-300">
-        <ItemDialog
-          categoryId={categoryId}
-          onSubmit={handleCreateItem}
-          open={isCreating}
-          onOpenChange={setIsCreating}
-          trigger={
-            <Button
-              size="sm"
-              variant="outline"
-              className="w-full text-base border-dashed border-slate-300 text-slate-500 hover:border-orange-400 hover:text-orange-500 hover:bg-orange-50/50 rounded-xl py-5 transition-all"
-              type="button"
-              onClick={() => setIsCreating(true)}
-            >
-              <Plus className="w-6! h-6! mr-2" /> Agregar plato
-            </Button>
-          }
-        />
+        {itemLimitReached ? (
+          <div className="w-full text-center py-4">
+            <p className="text-sm text-slate-500">
+              Alcanzaste el límite de 10 platos de tu plan Free.{" "}
+              <UpgradePlanLink />
+            </p>
+          </div>
+        ) : (
+          <ItemDialog
+            categoryId={categoryId}
+            onSubmit={handleCreateItem}
+            open={isCreating}
+            onOpenChange={setIsCreating}
+            trigger={
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-full text-base border-dashed border-slate-300 text-slate-500 hover:border-orange-400 hover:text-orange-500 hover:bg-orange-50/50 rounded-xl py-5 transition-all"
+                type="button"
+                onClick={() => setIsCreating(true)}
+              >
+                <Plus className="w-6! h-6! mr-2" /> Agregar plato
+              </Button>
+            }
+          />
+        )}
       </div>
 
       {/* Dialog de edición (controlado) */}

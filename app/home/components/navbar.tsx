@@ -11,7 +11,7 @@ import {
 import { UtensilsCrossed, LogOut } from "lucide-react";
 import Link from "next/link";
 import { handleLogout } from "../services/log_out_service";
-import { useCookie } from "../hooks/use_cookies";
+import { useCookie } from "@/lib/hooks/use_cookie";
 import Image from "next/image";
 
 export const Navbar = () => {

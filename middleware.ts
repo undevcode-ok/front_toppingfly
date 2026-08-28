@@ -96,6 +96,7 @@ export const config = {
   matcher: [
     '/',
     '/auth',
+    '/auth/:path*',
     '/forgot_password',
     '/home',
     '/user/:path*',

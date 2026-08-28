@@ -1,7 +1,7 @@
 //pagina de login : renderiza el login
 "use client"
-import { Navbar } from "..//auth/register-free/components/Navbar";
-import { LoginCard } from "./components/login_card";
+import { LoginCard } from "./login_card";
+import Navbar from "@/app/auth/components/Navbar";
 
 
 const login = () => {

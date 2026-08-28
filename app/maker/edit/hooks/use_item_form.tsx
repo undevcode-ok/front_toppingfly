@@ -5,6 +5,8 @@ import { itemValidations, ItemFormData } from "../utils/validate_item_form";
 import { useState } from "react";
 import { Items } from "@/app/home/types/menu";
 import { toast } from "sonner";
+import { isFreePlanLimitMessage } from "@/lib/utils";
+import { UpgradePlanLink } from "@/common/components/molecules/upgrade_plan_link";
 
 interface UseItemFormProps {
   item?: Items;
@@ -134,7 +136,17 @@ export const useItemForm = ({
           await onSuccess();
         }
       } else {
-        toast.error(result.error || "Error al crear el plato");
+        const errorMessage = result.error || "Error al crear el plato";
+        if (isFreePlanLimitMessage(errorMessage)) {
+          toast.error(
+            <span>
+              {errorMessage}{" "}
++              <UpgradePlanLink className="underline font-bold text-white hover:text-orange-100" />
+            </span>
+          );
+        } else {
+          toast.error(errorMessage);
+        }
       }
     } catch (error) {
       console.error("❌ [handleFormSubmit] Error en submit:", error);

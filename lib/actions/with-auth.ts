@@ -54,7 +54,18 @@ export async function handleAuthResponse(response: Response) {
   }
 
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    // Intentamos extraer el mensaje real del backend (ej: límites del plan Free)
+    // en vez de mostrar siempre un genérico "HTTP 403: Forbidden"
+    let message = `HTTP ${response.status}: ${response.statusText}`;
+    try {
+      const body = await response.clone().json();
+      if (body?.message) {
+        message = body.message;
+      }
+    } catch {
+      // el body no era JSON o venía vacío: nos quedamos con el mensaje genérico
+    }
+    throw new Error(message);
   }
 
   return response;

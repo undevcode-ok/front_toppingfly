@@ -8,13 +8,16 @@ import {
   CardContent,
 } from "@/common/components/organism/card";
 
-import { Edit, BookImage, QrCode, Loader2 } from "lucide-react";
+import { Edit, QrCode, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useQrHandler } from "../../hooks/use_qr_handler";
 import { DialogTrigger } from "@/common/components/organism/dialog";
 import { InfoDialog } from "./Info_Dialog";
 import { Menu } from "@/app/home/types/menu";
 import { motion } from "framer-motion";
+
+const DEFAULT_LOGO = "/logo free/Logo.png";
+
 interface MenuCardProps {
   menuData: Menu | null;
 }
@@ -52,25 +55,16 @@ export const InfoCard = ({ menuData }: MenuCardProps) => {
             <div className="w-28 h-28 bg-white rounded-full flex items-center justify-center border-4 border-white shadow-xl">
               {/* logo */}
               <div
-                className={`w-28 h-28 rounded-full overflow-hidden flex items-center justify-center 
-              ${
-                menuData?.logo
-                  ? "ring-2 ring-slate-200"
-                  : "border-2 border-dashed border-slate-300"
-              }`}
+                className="w-28 h-28 rounded-full overflow-hidden flex items-center justify-center "
               >
-                {menuData?.logo ? (
-                  <Image
-                    src={menuData?.logo}
-                    alt="Logo preview"
-                    width={80}
-                    height={80}
-                    className="object-cover"
-                    priority
-                  />
-                ) : (
-                  <BookImage className="w-12 h-12 text-slate-400" />
-                )}
+                <Image
+                  src={menuData?.logo || DEFAULT_LOGO}
+                  alt="Logo preview"
+                  width={600}
+                  height={600}
+                  className={menuData?.logo ? "object-cover" : "object-contain"}
+                  priority
+                />
               </div>
             </div>
           </div>
