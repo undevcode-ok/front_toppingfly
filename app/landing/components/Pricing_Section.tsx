@@ -7,7 +7,7 @@ import { useWhatsApp } from "../hooks/use_WhatsApp";
 import { WHATSAPP_CONFIG } from "../utils/landing_constants";
 
 const FULL_PLAN_MESSAGE =
-    "¡Hola! Quiero saber más sobre el plan Full de ToppingFly.";
+    "¡Hola! Quiero saber más sobre el plan Topping Full.";
 
 const freeFeatures = [
     "1 menú activo",
@@ -148,7 +148,7 @@ export const PricingSection = () => {
                             onClick={() => openWhatsApp(FULL_PLAN_MESSAGE)}
                             className="mt-6 w-full rounded-full bg-linear-to-r from-orange-400 to-orange-500 text-white hover:shadow-lg py-6 text-base font-semibold"
                         >
-                            Contactar ventas
+                            Elegir plan
                         </Button>
 
                         <hr className="my-6 border-slate-200" />
