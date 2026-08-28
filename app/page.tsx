@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { LandingNavbar } from "@/app/landing/components/Landing_Navbar";
 import { HeroSection } from "@/app/landing/components/Hero_Section";
+import { PricingSection } from "./landing/components/Pricing_Section";
 import { FeaturesSection } from "./landing/components/Features_Section";
 import { Footer } from "./landing/components/Footer";
 import {PromotionDialog} from  "./landing/components/Promotion_Dialog"
@@ -21,6 +22,7 @@ export default function LandingPage() {
       {/*<PromotionDialog />*/}
       <LandingNavbar />
       <HeroSection />
+      <PricingSection />
       <FeaturesSection />
       <Footer />
     </div>
