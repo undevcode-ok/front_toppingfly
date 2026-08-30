@@ -4,7 +4,7 @@ export type registerFreeForm = {
   name: string;
   lastName: string;
   email: string;
-  cel?: string;
+  cel: string;
   password: string;
   confirmationPassword: string;
 };

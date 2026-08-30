@@ -58,7 +58,7 @@ export const RegisterField = () => {
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="cel">Celular (opcional)</FieldLabel>
+            <FieldLabel htmlFor="cel">Celular</FieldLabel>
             <Input
               {...register("cel")}
               id="cel"
