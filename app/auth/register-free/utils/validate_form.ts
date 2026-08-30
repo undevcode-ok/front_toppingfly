@@ -22,9 +22,8 @@ export const validations = z
     cel: z
       .string()
       .trim()
-      .max(50, "El celular no puede tener más de 50 caracteres")
-      .optional()
-      .or(z.literal("")),
+      .min(6, "El celular es obligatorio")
+      .max(50, "El celular no puede tener más de 50 caracteres"),
     password: z
       .string()
       .min(8, "La contraseña debe tener al menos 8 caracteres")

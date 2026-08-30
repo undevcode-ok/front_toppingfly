@@ -20,11 +20,11 @@ export const validations = z.object({
   cel: z
     .string()
     .trim()
-    .optional()
+    .min(1, "El celular es obligatorio")
     .refine(
-      (val) => !val || /^[0-9]{10}$/.test(val),
+      (val) => /^[0-9]{10}$/.test(val),
       "El número de celular debe tener 10 dígitos y solo contener números"
-    ), // no es obligatorio pero si se pone debe ser 10 numeros
+    ),
   role_id: z
     .number()
     .optional() // roleId no es un campo de entrada, pero si se incluyera lo validamos como un número

@@ -4,6 +4,6 @@ export type formUser = {
   name: string;
   last_name: string;
   email: string;
-  cel?: string;
+  cel: string;
   role_id: number;
 };
