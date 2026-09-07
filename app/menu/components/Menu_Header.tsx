@@ -3,7 +3,7 @@ import { Card } from "@/common/components/organism/card";
 import { Menu } from "../types/menu";
 import { getTextColor } from "../utils/color_utils";
 
-const DEFAULT_LOGO = "/logo free/Logo.png";
+const DEFAULT_LOGO = "/logo free/Logo.webp";
 
 interface MenuHeaderProps {
   menu: Menu;

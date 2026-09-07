@@ -16,7 +16,7 @@ import { InfoDialog } from "./Info_Dialog";
 import { Menu } from "@/app/home/types/menu";
 import { motion } from "framer-motion";
 
-const DEFAULT_LOGO = "/logo free/Logo.png";
+const DEFAULT_LOGO = "/logo free/Logo.webp";
 
 interface MenuCardProps {
   menuData: Menu | null;
