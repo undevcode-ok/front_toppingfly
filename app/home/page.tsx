@@ -6,12 +6,14 @@ import { Manrope } from "next/font/google";
 import { MenuList } from "./components/Menu_List";
 import Faq from "./components/Faq";
 import { motion } from "framer-motion";
+import { AccountSyncGuard } from "./components/Account_Sync_Guard";
 
 const manrope = Manrope({ subsets: ["latin"] });
 
 const page = () => {
   return (
     <div className="min-h-screen w-full flex flex-col">
+      <AccountSyncGuard />
       <Navbar />
       <div className="flex flex-col justify-center items-center py-8 grow">
         <div className="w-full max-w-7xl mx-auto px-4">
