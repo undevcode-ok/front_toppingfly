@@ -1,6 +1,6 @@
-import { toast } from "sonner";
 import { editItemService } from "../services/edit_item_service";
-import { updateImage } from "../services/image_service";
+import { uploadItemImage, replaceItemImage, patchImageQuotaFromErrorDetails } from "../services/image_service";
+import { ApiError } from "@/lib/actions/api-error";
 import { NewItem } from "../types/items";
 
 interface EditItemParams {
@@ -17,20 +17,17 @@ export const editItemSubmit = async ({
   onSuccess,
 }: EditItemParams) => {
   try {
-    // 1. Extraer datos del FormData original
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
     const priceStr = formData.get("price") as string | null;
     const imageFile = formData.get("image") as File | null;
 
-    // ✅ Convertir precio: si es 0 o vacío → null, sino → número
     let price: number | null = null;
     if (priceStr) {
       const parsedPrice = parseFloat(priceStr);
-      price = parsedPrice > 0 ? parsedPrice : null; // ✅ Si es 0 → null
+      price = parsedPrice > 0 ? parsedPrice : null;
     }
 
-    // 2. Actualizar datos básicos del item
     const updateData: Partial<NewItem> = {
       title,
       description,
@@ -39,29 +36,33 @@ export const editItemSubmit = async ({
     };
     const result = await editItemService(itemId, updateData);
 
-    // 3. Manejar actualización de imagen si existe un archivo nuevo
     const hasValidImage =
       imageFile && imageFile instanceof File && imageFile.size > 0;
 
+    let imageError: string | undefined;
+
     if (hasValidImage) {
-      // Creamos el FormData específico para el servicio de imágenes
-      const imageFormData = new FormData();
-
-      /** * Formato requerido por el backend:
-       * - 'images': Un string JSON con el mapeo del campo.
-       * - [fileField]: El archivo real.
-       */
-      const metadata = JSON.stringify([
-        { id: existingImageId, fileField: "image" },
-      ]);
-      imageFormData.append("images", metadata);
-      imageFormData.append("image", imageFile, imageFile.name);
-
       try {
-        // Corregido: Usamos itemId que viene por parámetros
-        await updateImage(itemId, imageFormData);
-      } catch (imageError: any) {
-        // No lanzamos error aquí para permitir que el flujo continúe si el texto sí se guardó
+        // Si ya había una imagen, es un reemplazo (campo "replacement").
+        // Si no había ninguna, es una subida nueva (campo "image").
+        if (existingImageId) {
+          await replaceItemImage(itemId, existingImageId, imageFile);
+        } else {
+          await uploadItemImage(itemId, imageFile);
+        }
+      } catch (uploadErr) {
+        console.error("⚠️ Error al subir/reemplazar imagen:", uploadErr);
+
+        if (uploadErr instanceof ApiError) {
+          if (uploadErr.code === "FREE_PLAN_IMAGE_UPLOAD_LIMIT") {
+            await patchImageQuotaFromErrorDetails(uploadErr.details);
+          }
+          imageError = uploadErr.message;
+        } else if (uploadErr instanceof Error) {
+          imageError = uploadErr.message;
+        } else {
+          imageError = "No pudimos actualizar la imagen del plato.";
+        }
       }
     }
 
@@ -69,10 +70,9 @@ export const editItemSubmit = async ({
       await onSuccess();
     }
 
-    return result;
-  } catch (error: any) {
+    return { item: result, imageError };
+  } catch (error) {
     console.error("❌ [editItemSubmit] Error crítico:", error);
-
     throw error;
   }
 };

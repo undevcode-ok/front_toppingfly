@@ -1,7 +1,7 @@
 import { createItemService } from "../services/create_item_service";
-import { updateImage } from "../services/image_service";
+import { uploadItemImage, patchImageQuotaFromErrorDetails } from "../services/image_service";
+import { ApiError } from "@/lib/actions/api-error";
 import { NewItem } from "../types/items";
-import { toast } from "sonner";
 
 interface CreateItemParams {
   formData: FormData;
@@ -10,7 +10,7 @@ interface CreateItemParams {
 }
 
 /**
- * Crea un item y luego sube su imagen usando la Server Action.
+ * Crea un item y, si hay imagen, la sube después.
  */
 export const createItemSubmit = async ({
   formData,
@@ -18,20 +18,17 @@ export const createItemSubmit = async ({
   onSuccess,
 }: CreateItemParams) => {
   try {
-    // 1. Extraer datos básicos del formulario
     const title = formData.get("title") as string;
     const description = formData.get("description") as string;
     const priceStr = formData.get("price") as string | null;
     const imageFile = formData.get("image") as File | null;
 
-    
     let price: number | null = null;
     if (priceStr) {
       const parsedPrice = parseFloat(priceStr);
-      price = parsedPrice > 0 ? parsedPrice : null; // ✅ Si es 0 → null
+      price = parsedPrice > 0 ? parsedPrice : null;
     }
 
-    // 2. Crear el objeto para el servicio de creación de texto
     const newItem: NewItem = {
       categoryId,
       title,
@@ -40,43 +37,42 @@ export const createItemSubmit = async ({
       active: true,
     };
 
-    
     const createdItem = await createItemService(newItem);
 
-    // 3. Si hay una imagen válida, procedemos a subirla
     const hasValidImage =
       imageFile && imageFile instanceof File && imageFile.size > 0;
 
+    let imageError: string | undefined;
+
     if (hasValidImage) {
-
-      // Creamos un FormData específico para la subida de imagen
-      const imageFormData = new FormData();
-
-      // Formato requerido: metadato en 'images' y archivo en el campo definido en 'fileField'
-      const metadata = JSON.stringify([{ fileField: "image" }]);
-      imageFormData.append("images", metadata);
-      imageFormData.append("image", imageFile, imageFile.name);
-
       try {
-        // Llamamos a la Server Action pasándole el FormData con el binario
-        const uploadedImage = await updateImage(createdItem.id, imageFormData);
+        const uploadResult = await uploadItemImage(createdItem.id, imageFile);
+        if (Array.isArray(uploadResult.images)) {
+          createdItem.images = uploadResult.images;
+        }
+      } catch (uploadErr) {
+        console.error("⚠️ Error al subir imagen:", uploadErr);
 
-        // Adjuntamos la respuesta de la imagen al objeto final (opcional)
-        createdItem.images = [uploadedImage];
-      } catch (imageError: any) {
-        console.error("⚠️ Error al subir imagen:", imageError);
-        
+        if (uploadErr instanceof ApiError) {
+          if (uploadErr.code === "FREE_PLAN_IMAGE_UPLOAD_LIMIT") {
+            await patchImageQuotaFromErrorDetails(uploadErr.details);
+          }
+          imageError = uploadErr.message;
+        } else if (uploadErr instanceof Error) {
+          imageError = uploadErr.message;
+        } else {
+          imageError = "No pudimos subir la imagen del plato.";
+        }
       }
     }
 
-    // 4. Ejecutar callback de éxito
     if (onSuccess) {
       await onSuccess();
     }
 
-    return createdItem;
-  } catch (error: any) {
+    return { item: createdItem, imageError };
+  } catch (error) {
     console.error("❌ Error en la creación del item:", error);
-    throw error; // Re-lanzamos para que useItemOperations lo capture
+    throw error;
   }
 };
