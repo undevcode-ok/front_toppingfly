@@ -41,11 +41,9 @@ export async function syncCurrentSession(): Promise<MeResponse | null> {
     const data: MeResponse = await response.json();
 
     if (data.account) {
-      await cookiesStore.set(
-        "account",
-        encodeURIComponent(JSON.stringify(data.account)),
-        { path: "/" }
-      );
+      await cookiesStore.set("account", JSON.stringify(data.account), {
+        path: "/",
+     });
     }
 
     return data;

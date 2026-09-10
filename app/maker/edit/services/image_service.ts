@@ -29,11 +29,7 @@ async function getAuthHeaders() {
 async function persistAccount(account?: AccountData) {
   if (!account) return;
   const cookieStore = await cookies();
-  await cookieStore.set(
-    "account",
-    encodeURIComponent(JSON.stringify(account)),
-    { path: "/" }
-  );
+  await cookieStore.set("account", JSON.stringify(account), { path: "/" });
 }
 
 // Cuando el backend rechaza una subida por FREE_PLAN_IMAGE_UPLOAD_LIMIT,
@@ -54,15 +50,11 @@ export async function patchImageQuotaFromErrorDetails(
   if (!raw) return;
 
   try {
-    const account: AccountData = JSON.parse(decodeURIComponent(raw));
+    const account: AccountData = JSON.parse(raw);
     if (!account.imagePolicy) return;
     if (current !== undefined) account.imagePolicy.uploadsUsed = current;
     if (remaining !== undefined) account.imagePolicy.uploadsRemaining = remaining;
-    await cookieStore.set(
-      "account",
-      encodeURIComponent(JSON.stringify(account)),
-      { path: "/" }
-    );
+    await cookieStore.set("account", JSON.stringify(account), { path: "/" });
   } catch {
     // cookie corrupta o imposible de parsear: no hacemos nada
   }

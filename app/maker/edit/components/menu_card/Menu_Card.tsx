@@ -2,7 +2,7 @@
 
 import { Card } from "@/common/components/organism/card";
 import { Button } from "@/common/components/atoms/button";
-import { Plus } from "lucide-react";
+import { Plus, Image as ImageIcon } from "lucide-react";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { NewCategoryDialog } from "./New_Category_Dialog";
 import { Menu } from "@/app/home/types/menu";
@@ -11,6 +11,7 @@ import { useState, useEffect, useCallback } from "react";
 import { getMenuId } from "../../services/menu";
 import { motion } from "framer-motion";
 import { useCookie } from "@/lib/hooks/use_cookie";
+import { useAccount } from "@/lib/hooks/use_account";
 
 const FREE_ROLE_ID = "4";
 const FREE_ITEM_LIMIT = 20;
@@ -25,18 +26,19 @@ export const MenuCard = ({ menuData: initialMenuData }: MenuCardProps) => {
   const [isRefetching, setIsRefetching] = useState(false);
   const [expandedCategoryId, setExpandedCategoryId] = useState<number | null>(null);
   const roleId = useCookie("roleId");
+  const { account } = useAccount();
 
   const refetchMenu = useCallback(async () => {
     if (!initialMenuData?.id) return;
-    
+
     // Guardar el ID de la categoría expandida antes del refetch
     const categoryToKeepOpen = expandedCategoryId;
-    
+
     setIsRefetching(true);
     try {
       const updatedMenu = await getMenuId(initialMenuData.id);
       setMenuData(updatedMenu);
-      
+
       // Restaurar la categoría expandida después del refetch
       // Solo si la categoría aún existe en el menú actualizado
       if (categoryToKeepOpen) {
@@ -69,7 +71,7 @@ export const MenuCard = ({ menuData: initialMenuData }: MenuCardProps) => {
     return null;
   }
 
-  // Plan Free: hasta 10 ítems por menú, contando todas las categorías.
+  // Plan Free: hasta 20 ítems por menú, contando todas las categorías.
   const totalItems = menuData.categories.reduce(
     (total, category) => total + (category.items?.length || 0),
     0
@@ -80,6 +82,8 @@ export const MenuCard = ({ menuData: initialMenuData }: MenuCardProps) => {
   const categoryLimitReached =
     roleId === FREE_ROLE_ID && menuData.categories.length >= FREE_CATEGORY_LIMIT;
 
+  // Cupo de imágenes de por vida: solo aplica al plan Free.
+  const imagePolicy = roleId === FREE_ROLE_ID ? account?.imagePolicy : undefined;
   return (
     <motion.div
       className="w-full sm:max-w-xl px-6 pt-6"
@@ -94,7 +98,18 @@ export const MenuCard = ({ menuData: initialMenuData }: MenuCardProps) => {
             <p className="text-base font-medium text-slate-500 uppercase tracking-wider mb-0 ml-1">
               Menú
             </p>
-            <div className="shrink-0">
+            <div className="flex items-center gap-2 shrink-0">
+              {imagePolicy && (
+                <div
+                  className="flex items-center gap-1.5 bg-orange-50 text-orange-600 text-sm font-semibold px-3 py-1.5 rounded-lg border border-orange-100"
+                  title="Fotos de platos usadas (de por vida, no se recuperan al borrar)"
+                >
+                  <ImageIcon className="w-4 h-4" />
+                  <span>
+                    {imagePolicy.uploadsUsed}/{imagePolicy.lifetimeUploadLimit}
+                  </span>
+                </div>
+              )}
               <NewCategoryDialog
                 menuId={menuData.id}
                 onSuccess={refetchMenu}
@@ -118,8 +133,8 @@ export const MenuCard = ({ menuData: initialMenuData }: MenuCardProps) => {
                 <div className="h-6 w-6 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />
               </div>
             ) : (
-              <CategoryList 
-                categories={menuData.categories} 
+              <CategoryList
+                categories={menuData.categories}
                 onMenuUpdate={refetchMenu}
                 expandedCategoryId={expandedCategoryId}
                 setExpandedCategoryId={setExpandedCategoryId}

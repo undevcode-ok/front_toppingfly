@@ -15,10 +15,8 @@ export const handleLoginResponse = async (response: authResponse) => {
   });
 
   if (response.account) {
-    await cookiesStore.set(
-      "account",
-      encodeURIComponent(JSON.stringify(response.account)),
-      { path: "/" }
-    );
+    await cookiesStore.set("account", JSON.stringify(response.account), {
+      path: "/",
+    });
   }
 };
