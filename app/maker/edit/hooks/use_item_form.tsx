@@ -7,6 +7,7 @@ import { Items } from "@/app/home/types/menu";
 import { toast } from "sonner";
 import { isFreePlanLimitMessage } from "@/lib/utils";
 import { UpgradePlanLink } from "@/common/components/molecules/upgrade_plan_link";
+import { notifyAccountUpdated } from "@/lib/hooks/use_account";
 
 interface UseItemFormProps {
   item?: Items;
@@ -90,18 +91,18 @@ export const useItemForm = ({
         type: "manual",
         message: "El precio debe ser un número positivo o igual a 0.",
       });
-      
+
       return; // Detener el submit
     }
 
     if (validPrice > 99999999) {
-    setError("price", {
-      type: "manual",
-      message: "El precio no puede exceder $99,999,999.",
-    });
-    
-    return; // Detener el submit
-  }
+      setError("price", {
+        type: "manual",
+        message: "El precio no puede exceder $99,999,999.",
+      });
+
+      return; // Detener el submit
+    }
 
     // ✅ Continuar con el FormData usando el precio validado
     const formData = new FormData();
@@ -131,7 +132,8 @@ export const useItemForm = ({
         } else {
           toast.success(result.message || "Plato creado exitosamente");
         }
-
+        // el submit pudo haber subido/reemplazado una imagen -> el cupo cambió
+        notifyAccountUpdated();
         if (onSuccess) {
           await onSuccess();
         }
@@ -141,7 +143,7 @@ export const useItemForm = ({
           toast.error(
             <span>
               {errorMessage}{" "}
-+              <UpgradePlanLink className="underline font-bold text-white hover:text-orange-100" />
+              +              <UpgradePlanLink className="underline font-bold text-white hover:text-orange-100" />
             </span>
           );
         } else {

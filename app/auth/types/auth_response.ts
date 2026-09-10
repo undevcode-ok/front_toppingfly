@@ -1,4 +1,6 @@
 // tipado de respuesta para el servicio de autenticacion
+import { AccountData } from "./account";
+
 export interface authResponse {
   message: string;
   token: string;
@@ -12,4 +14,5 @@ export interface authResponse {
     active: boolean;
     subdomain: string;
   };
+  account?: AccountData;
 }

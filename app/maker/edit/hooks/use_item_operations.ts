@@ -13,7 +13,6 @@ export const useItemOperations = ({ onItemChange }: UseItemOperationsProps) => {
   const [creatingItem, setCreatingItem] = useState(false);
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
 
-  // ========== ELIMINAR ITEM ==========
   const deleteItem = async (itemId: number) => {
     setDeletingItemId(itemId);
     try {
@@ -28,49 +27,61 @@ export const useItemOperations = ({ onItemChange }: UseItemOperationsProps) => {
     }
   };
 
-  // ========== CREAR ITEM ==========
   const createItem = async (formData: FormData, categoryId: number) => {
     setCreatingItem(true);
     try {
-      await createItemSubmit({
+      const { imageError } = await createItemSubmit({
         formData,
         categoryId,
         onSuccess: onItemChange,
       });
-      // ✅ Retornamos éxito para el ItemDialog
+
+      if (imageError) {
+        return {
+          success: true,
+          imageError: true,
+          message: `El plato se creó, pero la imagen no se pudo subir: ${imageError}`,
+        };
+      }
+
       return { success: true, message: "¡Todo listo! El plato fue creado exitosamente. Puedes seguir editando tu menú." };
     } catch (error) {
       console.error("❌ [useItemOperations] Error al crear item:", error);
-      // ✅ Retornamos el error formateado
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : "Lo sentimos, no se pudo crear el plato. Intenta de nuevo más tarde." 
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Lo sentimos, no se pudo crear el plato. Intenta de nuevo más tarde.",
       };
     } finally {
       setCreatingItem(false);
     }
   };
 
-  // ========== EDITAR ITEM ==========
   const editItem = async (item: Items, formData: FormData) => {
     const existingImageId = item.images?.[0]?.id;
     setEditingItemId(item.id);
 
     try {
-      await editItemSubmit({
+      const { imageError } = await editItemSubmit({
         itemId: item.id,
         formData,
         existingImageId,
         onSuccess: onItemChange,
       });
-      // ✅ Retornamos éxito para el ItemDialog
+
+      if (imageError) {
+        return {
+          success: true,
+          imageError: true,
+          message: `El plato se actualizó, pero la imagen no se pudo subir: ${imageError}`,
+        };
+      }
+
       return { success: true, message: "¡Plato editado exitosamente! Ya puedes continuar ajustando tu menú." };
     } catch (error) {
       console.error("❌ [useItemOperations] Error al editar item:", error);
-      // ✅ Retornamos el error formateado
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : "No pudimos actualizar el plato en este momento. Por favor, intenta nuevamente." 
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "No pudimos actualizar el plato en este momento. Por favor, intenta nuevamente.",
       };
     } finally {
       setEditingItemId(null);

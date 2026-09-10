@@ -9,7 +9,8 @@ export const handleLogout = async () => {
   cookiesStore.delete("token");
   cookiesStore.delete("subdomain");
   cookiesStore.delete("roleId");
+  cookiesStore.delete("account");
 
-  // Redirigir a /auth
+  // Redirigir a la landing page
   redirect("/");
 };

@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { ApiError } from "./api-error";
 
 /**
  * Wrapper que maneja errores de autenticación en Server Actions
@@ -32,6 +33,7 @@ export async function withAuth<T>(
       cookiesStore.delete("token");
       cookiesStore.delete("subdomain");
       cookiesStore.delete("roleId");
+      cookiesStore.delete("account");
       redirect("/auth");
     }
 
@@ -50,6 +52,7 @@ export async function handleAuthResponse(response: Response) {
     cookiesStore.delete("token");
     cookiesStore.delete("subdomain");
     cookiesStore.delete("roleId");
+    cookiesStore.delete("account");
     redirect("/auth");
   }
 
@@ -57,15 +60,23 @@ export async function handleAuthResponse(response: Response) {
     // Intentamos extraer el mensaje real del backend (ej: límites del plan Free)
     // en vez de mostrar siempre un genérico "HTTP 403: Forbidden"
     let message = `HTTP ${response.status}: ${response.statusText}`;
+    let code: string | undefined;
+    let details: Record<string, unknown> | undefined;
+
     try {
       const body = await response.clone().json();
       if (body?.message) {
         message = body.message;
       }
+      if (body?.details) {
+        details = body.details;
+        code = typeof body.details.code === "string" ? body.details.code : undefined;
+      }
     } catch {
       // el body no era JSON o venía vacío: nos quedamos con el mensaje genérico
     }
-    throw new Error(message);
+
+    throw new ApiError(message, code, details);
   }
 
   return response;

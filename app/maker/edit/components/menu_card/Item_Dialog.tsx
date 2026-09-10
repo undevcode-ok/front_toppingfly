@@ -20,7 +20,10 @@ import { Items } from "@/app/home/types/menu";
 import { useItemForm } from "../../hooks/use_item_form";
 import { Errors } from "./errors_msg";
 import { useCookie } from "@/lib/hooks/use_cookie";
+import { useAccount, notifyAccountUpdated } from "@/lib/hooks/use_account";
 import { UpgradePlanLink } from "@/common/components/molecules/upgrade_plan_link";
+import { deleteItemImage } from "../../services/image_service";
+import { toast } from "sonner";
 
 const FREE_ROLE_ID = "4";
 
@@ -58,6 +61,7 @@ export const ItemDialog: React.FC<ItemDialogProps> = ({
     handleSubmit,
     errors,
     isSubmitting,
+    imageFile,
     imagePreview,
     handleImageChange,
     removeImage,
@@ -85,11 +89,67 @@ export const ItemDialog: React.FC<ItemDialogProps> = ({
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const roleId = useCookie("roleId");
+  const { account } = useAccount();
   const isFree = roleId === FREE_ROLE_ID;
 
+  // El cupo de imágenes de por vida solo aplica al plan Free.
+  const imagePolicy = isFree ? account?.imagePolicy : undefined;
+  const uploadDisabled = isFree && !!imagePolicy && imagePolicy.uploadsRemaining <= 0;
+
+  const existingImageId = item?.images?.[0]?.id;
+  const [isDeletingImage, setIsDeletingImage] = React.useState(false);
+
   const handleImageClick = () => {
-    if (isFree) return;
+    if (uploadDisabled) return;
     fileInputRef.current?.click();
+  };
+
+  // Valida tamaño/formato contra lo que indique el backend (si aplica, ej: Free)
+  // antes de aceptar el archivo localmente.
+  const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (file && imagePolicy) {
+      if (file.size > imagePolicy.maxFileSizeBytes) {
+        const maxMb = (imagePolicy.maxFileSizeBytes / (1024 * 1024)).toFixed(0);
+        toast.error(`La imagen no puede superar ${maxMb}MB.`);
+        e.target.value = "";
+        return;
+      }
+      if (!imagePolicy.allowedMimeTypes.includes(file.type)) {
+        toast.error("Formato no permitido. Usá JPG, PNG, GIF o WEBP.");
+        e.target.value = "";
+        return;
+      }
+    }
+
+    handleImageChange(e);
+  };
+
+  // Elimina la imagen. Si es la imagen ya guardada del ítem (no una selección
+  // local pendiente de guardar), borra en el backend de verdad.
+  const handleRemoveImage = async () => {
+    const hasPendingNewFile = !!imageFile;
+
+    if (existingImageId && !hasPendingNewFile) {
+      setIsDeletingImage(true);
+      try {
+        await deleteItemImage(item!.id, existingImageId);
+        notifyAccountUpdated();
+        removeImage();
+        toast.success("Imagen eliminada.");
+      } catch (err) {
+        console.error("Error al eliminar imagen:", err);
+        toast.error(
+          err instanceof Error ? err.message : "No pudimos eliminar la imagen."
+        );
+      } finally {
+        setIsDeletingImage(false);
+      }
+    } else {
+      // selección local todavía no guardada: solo la limpiamos, sin tocar el backend
+      removeImage();
+    }
   };
 
   const handlePriceBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -178,17 +238,17 @@ export const ItemDialog: React.FC<ItemDialogProps> = ({
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
-                onChange={handleImageChange}
+                onChange={handleFileSelected}
                 className="hidden"
-                disabled={isFree}
+                disabled={uploadDisabled}
               />
 
               {imagePreview ? (
                 <div
-                  onClick={handleImageClick}
+                  onClick={uploadDisabled ? undefined : handleImageClick}
                   className={`relative w-full h-90 rounded-lg border-2 overflow-hidden group transition-all ${
-                    isFree
-                      ? "border-slate-200 opacity-70 cursor-not-allowed"
+                    uploadDisabled
+                      ? "border-slate-200 cursor-default"
                       : "border-slate-200 cursor-pointer hover:border-orange-400"
                   }`}
                 >
@@ -197,34 +257,36 @@ export const ItemDialog: React.FC<ItemDialogProps> = ({
                     alt="Preview"
                     className="absolute inset-0 w-full h-full object-cover"
                   />
-                  {!isFree && (
-                    <>
-                      {/* Overlay con hover */}
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <Upload className="w-10 h-10 text-white" />
-                        <p className="text-white text-sm font-medium ml-2">
-                          Cambiar imagen
-                        </p>
-                      </div>
-                      {/* Botón de eliminar */}
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeImage();
-                        }}
-                        className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-lg opacity-0 group-hover:opacity-100 z-10"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </>
+                  {!uploadDisabled && (
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <Upload className="w-10 h-10 text-white" />
+                      <p className="text-white text-sm font-medium ml-2">
+                        Cambiar imagen
+                      </p>
+                    </div>
                   )}
+                  {/* Botón de eliminar: siempre disponible si hay imagen, sin importar el cupo */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveImage();
+                    }}
+                    disabled={isDeletingImage}
+                    className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition shadow-lg opacity-0 group-hover:opacity-100 z-10 disabled:opacity-50"
+                  >
+                    {isDeletingImage ? (
+                      <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <X className="w-4 h-4" />
+                    )}
+                  </button>
                 </div>
               ) : (
                 <div
-                  onClick={handleImageClick}
+                  onClick={uploadDisabled ? undefined : handleImageClick}
                   className={`flex flex-col items-center justify-center w-full h-48 border-2 border-dashed rounded-lg transition-all ${
-                    isFree
+                    uploadDisabled
                       ? "border-slate-200 opacity-70 cursor-not-allowed"
                       : "border-slate-300 cursor-pointer hover:border-orange-400 hover:bg-orange-50/50"
                   }`}
@@ -237,10 +299,19 @@ export const ItemDialog: React.FC<ItemDialogProps> = ({
                   </div>
                 </div>
               )}
-              {isFree ? (
+
+              {uploadDisabled ? (
                 <p className="text-xs text-center text-slate-500">
-                  Para agregar fotos a tus platos necesitás el plan Full.{" "}
+                  Alcanzaste el límite de {imagePolicy?.lifetimeUploadLimit} fotos
+                  de tu plan Free (borrar una foto no libera cupo).{" "}
                   <UpgradePlanLink />
+                </p>
+              ) : isFree && imagePolicy ? (
+                <p className="text-xs text-center text-slate-500">
+                  PNG, JPG o WEBP (MAX.{" "}
+                  {(imagePolicy.maxFileSizeBytes / (1024 * 1024)).toFixed(0)}
+                  MB) · Te quedan {imagePolicy.uploadsRemaining} fotos en tu
+                  plan Free
                 </p>
               ) : (
                 <p className="text-xs text-center text-slate-500">

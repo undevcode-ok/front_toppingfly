@@ -1,4 +1,5 @@
 // tipado del formulario y de la respuesta de POST /api/auth/register-free
+import { AccountData } from "@/app/auth/types/account";
 
 export type registerFreeForm = {
   name: string;
@@ -9,8 +10,7 @@ export type registerFreeForm = {
   confirmationPassword: string;
 };
 
-// mismo shape que authResponse (token + user), más el bloque "account"
-// que por ahora no persistimos (ver storage_service reutilizado del login)
+// mismo shape que authResponse (token + user) + account
 export interface registerFreeResponse {
   message: string;
   token: string;
@@ -24,14 +24,7 @@ export interface registerFreeResponse {
     active: boolean;
     subdomain: string;
   };
-  account: {
-    plan: string;
-    limits: {
-      menus: number | null;
-      itemsPerMenu: number | null;
-      images: boolean;
-    };
-  };
+  account: AccountData;
 }
 
 // forma del error 400 del backend (errores de validación por campo)
